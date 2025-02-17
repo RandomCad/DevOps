@@ -8,7 +8,7 @@ WORKDIR /chamaeleon
 COPY Cargo.toml Cargo.lock ./
 RUN cargo build --release
 
-COPY src ./chamaeleon/src
+COPY chamaeleon/src ./src
 RUN touch src/main.rs; \
     cargo build --release
 
