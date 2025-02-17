@@ -25,4 +25,4 @@ jobs:
         with:
           file: ./chamaeleon/Dockerfile
           push: true
-          tags: user/app:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/app:latest
