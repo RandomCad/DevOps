@@ -2,13 +2,13 @@ FROM rust:1.80-alpine AS builder
 
 RUN apk add --no-cache libc-dev
 
-WORKDIR /chamaeleon
+WORKDIR /
 RUN cargo new chamaeleon
 WORKDIR /chamaeleon
 COPY Cargo.toml Cargo.lock ./
 RUN cargo build --release
 
-COPY src ./src
+COPY src ./chamaeleon/src
 RUN touch src/main.rs; \
     cargo build --release
 
