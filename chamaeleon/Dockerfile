@@ -5,10 +5,10 @@ RUN apk add --no-cache libc-dev
 WORKDIR /
 RUN cargo new chamaeleon
 WORKDIR /chamaeleon
-COPY chamaeleon/Cargo.toml chamaeleon/Cargo.lock ./
+COPY Cargo.toml Cargo.lock ./
 RUN cargo build --release
 
-COPY chamaeleon/src ./src
+COPY src ./src
 RUN touch src/main.rs; \
     cargo build --release
 
