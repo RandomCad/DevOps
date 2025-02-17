@@ -2,7 +2,7 @@ FROM rust:1.80-alpine AS builder
 
 RUN apk add --no-cache libc-dev
 
-WORKDIR /
+WORKDIR /chamaeleon
 RUN cargo new chamaeleon
 WORKDIR /chamaeleon
 COPY Cargo.toml Cargo.lock ./
