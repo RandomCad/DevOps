@@ -24,6 +24,5 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: "{{defaultContext}}:chamaeleon"
-          file: ./chamaeleon/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/chamaeleon:latest
