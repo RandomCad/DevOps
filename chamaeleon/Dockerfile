@@ -5,7 +5,7 @@ RUN apk add --no-cache libc-dev
 WORKDIR /
 RUN cargo new chamaeleon
 WORKDIR /chamaeleon
-COPY Cargo.toml Cargo.lock ./
+COPY chamaeleon/Cargo.toml chamaeleon/Cargo.lock ./
 RUN cargo build --release
 
 COPY chamaeleon/src ./src
