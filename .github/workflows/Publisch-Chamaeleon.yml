@@ -23,6 +23,6 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: https://github.com/RandomCad/DevOps.git#${{GITHUB_REF}}
+          context: https://github.com/RandomCad/DevOps.git#${{GITHUB_REF}}/chamaeleon
           push: true
           tags: user/app:latest
