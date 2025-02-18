@@ -1,0 +1,43 @@
+openapi: 3.1.0
+info:
+  title: FileStore
+  version: "0.1.0"
+paths:
+  /{file}:
+    parameters:
+    - in: path
+      name: file
+      description: file path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: read file
+      operationId: readFile
+      responses:
+        '200':
+          description: file content
+          content:
+            '*/*':
+              schema: {}
+        '404':
+          description: file not found
+    put:
+      summary: Store file with given content
+      operationId: storeFile
+      requestBody:
+        description: the file to store
+        content:
+          '*/*':
+            schema: {}
+      responses:
+        '200':
+          description: file stored
+    delete:
+      summary: remove a file
+      operationId: removeFile
+      responses:
+        '200':
+          description: file removed
+        '500':
+          description: file not found
