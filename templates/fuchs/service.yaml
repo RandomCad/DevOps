@@ -1,0 +1,23 @@
+{{ template "devnotes.service" .Values.fuchs }}
+        env:
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: fuchs-db-conf
+              key: POSTGRES_DB
+        - name: DB_USER
+          valueFrom:
+            configMapKeyRef:
+              name: fuchs-db-conf
+              key: POSTGRES_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: fuchs-db-conf
+              key: POSTGRES_PASSWORD
+        - name: DB_HOST
+          value: {{ template "devnotes.svc_url" .Values.fuchs_db }}
+        - name: URL_HAMSTER
+          value: {{ template "devnotes.svc_url" .Values.hamster }}
+        - name: URL_CHAMAELEON
+          value: {{ template "devnotes.svc_url" .Values.chamaeleon }}

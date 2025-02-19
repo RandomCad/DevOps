@@ -44,3 +44,21 @@ jobs:
           context: "{{defaultContext}}:hamster"
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/hamster:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - 
+        uses: actions/checkout@v4
+      - 
+        name: Set the Kubernetes context
+        uses: azure/k8s-set-context@v4
+        with:
+          method: service-account
+          k8s-url: ${{ secrets.KUBERNETES_URL }}
+          k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
+      - 
+        name: deploy to k8s cluster
+        uses: WyriHaximus/github-action-helm3@v3
+        with:
+          exec: helm upgrade DevNotes . --install --atomic --namespace=dhge
