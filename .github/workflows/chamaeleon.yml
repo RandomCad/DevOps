@@ -1,4 +1,4 @@
-name: Rust
+name: chamaeleon
 
 on:
   push:
@@ -25,17 +25,15 @@ jobs:
     - name: Run Application Test
       working-directory: ./chamaeleon
       run: ./test.sh
+    - name: docker build
+      working-directory: ./chamaeleon
+      run: docker build -t myapp:latest .
+    - name: Run container to test
+      working-directory: ./chamaeleon
+      run: |
+        # Run the container and output logs
+        docker run --rm myapp:latest echo "Container is running!"
+        docker stop myapp:latest -t 3
       
-  build_hamster:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Build
-      working-directory: ./hamster
-      run: cargo build --verbose
-    - name: Run Application Test
-      working-directory: ./hamster
-      run: ./test.sh
+  
 
