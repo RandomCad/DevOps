@@ -3,12 +3,13 @@ import os
 from .database import DatabaseConnection
 
 
-db_connection = DatabaseConnection(
-    dbname=os.getenv("DB_NAME"),
-    user=os.getenv("DB_USER"),
-    password=os.getenv("DB_PASSWORD"),
-    host=os.getenv("DB_HOST")
-)
+DB_NAME=os.getenv("DB_NAME")
+DB_USER=os.getenv("DB_USER")
+DB_PASSWORD=os.getenv("DB_PASSWORD")
+DB_HOST=os.getenv("DB_HOST")
 
 # get environment variables and set them as constants
 URL_HAMSTER = os.getenv("URL_HAMSTER")
+# URL_CHAMELEON = os.getenv("URL_CHAMELEON")
+
+from .main import app
