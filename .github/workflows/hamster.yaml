@@ -1,0 +1,31 @@
+name: Rust
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+    
+env:
+  CARGO_TERM_COLOR: always
+  
+jobs:
+  build_hamster:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build
+      working-directory: ./hamster
+      run: cargo build --verbose
+    - name: Run Application Test
+      working-directory: ./hamster
+      run: ./test.sh
+    - name: docker build
+      working-directory: ./hamster
+      run: docker build -t myapp:latest .
+    - name: Run container to test
+      working-directory: ./hamster
+      run: |
+        # Run the container and output logs
+        docker run --rm myapp:latest echo "Container is running!"
+        docker stop myapp:latest -t 3
