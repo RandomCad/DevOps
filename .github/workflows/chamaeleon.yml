@@ -32,7 +32,7 @@ jobs:
       working-directory: ./chamaeleon
       run: |
         # Run the container and output logs
-        docker run --rm myapp:latest echo "Container is running!"
+        docker run --rm myapp:latest
         docker stop myapp:latest -t 3
       
   
