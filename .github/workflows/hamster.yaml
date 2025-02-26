@@ -28,5 +28,5 @@ jobs:
       working-directory: ./hamster
       run: |
         # Run the container and output logs
-        docker run --rm myapp:latest
+        docker run --rm myapp:latest &
         docker stop myapp:latest -t 3
