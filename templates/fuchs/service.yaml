@@ -16,8 +16,8 @@
               name: fuchs-db-conf
               key: POSTGRES_PASSWORD
         - name: DB_HOST
-          value: {{ template "devnotes.svc_url" .Values.fuchs_db }}
+          value: {{ .Values.fuchs_db.name }}-svc.{{ .Release.Namespace }}.svc.cluster.local
         - name: URL_HAMSTER
-          value: {{ template "devnotes.svc_url" .Values.hamster }}
+          value: {{ .Values.hamster.name }}-svc.{{ .Release.Namespace }}.svc.cluster.local
         - name: URL_CHAMAELEON
-          value: {{ template "devnotes.svc_url" .Values.chamaeleon }}
+          value: {{ .Values.chamaeleon.name }}-svc.{{ .Release.Namespace }}.svc.cluster.local

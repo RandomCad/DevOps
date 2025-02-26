@@ -1,0 +1,1 @@
+-- dummy init.sql just so that tests run successfully

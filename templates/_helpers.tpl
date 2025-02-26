@@ -1,8 +1,3 @@
-{{/* url for a service */}}
-{{- define "devnotes.svc_url" -}}
-{{ .name }}-svc.{{ $.Release.Namespace }}.svc.cluster.local
-{{- end }}
-
 {{/* simple deployment + service */}}
 {{- define "devnotes.service" }}
 apiVersion: v1
