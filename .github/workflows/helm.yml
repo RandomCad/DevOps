@@ -19,8 +19,8 @@ jobs:
         method: service-account
         k8s-url: ${{ secrets.KUBERNETES_URL }}
         k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
-    - name: print kubeconfig
-      run: cat ~/.kube/config
+    - name: print k8s context
+      run: kubectl config get-contexts
     - 
       name: lint helm chart
       uses: WyriHaximus/github-action-helm3@v3
