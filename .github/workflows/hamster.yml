@@ -28,5 +28,6 @@ jobs:
       working-directory: ./hamster
       run: |
         # Run the container and output logs
-        docker run --rm myapp:latest --name test &
+        docker run --rm --name test myapp:latest &
+        sleep 3s
         docker stop test -t 3
