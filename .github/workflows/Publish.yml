@@ -47,6 +47,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    needs: [pub_hamster, pub_chamaeleon]
     steps:
       - 
         uses: actions/checkout@v4
