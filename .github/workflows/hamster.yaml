@@ -1,4 +1,4 @@
-name: Rust
+name: hamster
 
 on:
   push:
@@ -27,5 +27,5 @@ jobs:
       working-directory: ./hamster
       run: |
         # Run the container and output logs
-        docker run --rm myapp:latest echo "Container is running!"
+        docker run --rm myapp:latest
         docker stop myapp:latest -t 3
