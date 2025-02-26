@@ -19,8 +19,9 @@ jobs:
         method: service-account
         k8s-url: ${{ secrets.KUBERNETES_URL }}
         k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
-    - name: print k8s context
-      run: kubectl config get-contexts
+    - 
+      name: set k8s namespace
+      run: kubectl config set-context --current --namespace dhge
     - 
       name: lint helm chart
       uses: WyriHaximus/github-action-helm3@v3
