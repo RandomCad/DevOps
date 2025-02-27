@@ -1,17 +1,31 @@
 mkdir -p files
 rm -f files/__test.txt
 
-target/debug/hamster &
-pid=$!
+kind=$1
+
+if [[ $kind = "docker" ]]; then
+    docker run -d -p 8000:8000 --name hamster_test hamster:test
+else
+    target/debug/hamster &
+    pid=$!
+fi
 
 sleep 1
 
 assert() {
     if [[ $1 != $2 ]]; then
         echo "assertion failed: $1 != $2"
-        kill $pid
-        exit 1
+        finish 1
     fi
+}
+
+finish() {
+    if [[ $kind = "docker" ]]; then
+        docker stop hamster_test -t 3
+    else
+        kill $pid
+    fi
+    exit $1
 }
 
 curl_status() {
@@ -32,5 +46,4 @@ assert 200 $(curl_status DELETE)
 assert 500 $(curl_status DELETE)
 assert 404 $(curl_status GET)
 
-kill $pid
-exit 0
+finish 0

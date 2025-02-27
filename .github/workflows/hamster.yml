@@ -21,11 +21,7 @@ jobs:
       run: ./test.sh
     - name: docker build
       working-directory: ./hamster
-      run: docker build -t myapp:latest .
+      run: docker build -t hamster:test .
     - name: Run container to test
       working-directory: ./hamster
-      run: |
-        # Run the container and output logs
-        docker run --rm --name test myapp:latest &
-        sleep 3s
-        docker stop test -t 3
+      run: ./test.sh docker
