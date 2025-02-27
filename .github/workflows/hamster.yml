@@ -16,8 +16,11 @@ jobs:
     - name: Setup cache
       uses: Swatinem/rust-cache@v2
       with:
+        prefix-key: ""
         shared-key: v0-rust
-        workspaces: "hamster -> target"
+        workspaces: |
+          hamster -> target
+          chamaeleon -> target
     - name: Build
       working-directory: ./hamster
       run: cargo build --verbose
