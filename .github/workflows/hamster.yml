@@ -17,26 +17,23 @@ jobs:
       uses: Swatinem/rust-cache@v2
       with:
         shared-key: shared
-        workspaces: |
-          hamster -> target
-          chamaeleon -> target
         # hamster and chamaeleon share a cache -> only chamaeleon stores to cache to avoid conflicts
         save-if: "false"
     - name: Build
-      working-directory: ./hamster
-      run: cargo build --verbose
+      run: cargo build --verbose -p hamster
     - name: Run Application Test
-      working-directory: ./hamster
-      run: ./test.sh
-    - name: Expose GitHub Runtime # needed for docker build with cache
-      uses: crazy-max/ghaction-github-runtime@v3
-    - name: docker build
-      working-directory: ./hamster
-      run: docker buildx create --name=container --driver=docker-container &&
-        docker build -t hamster:test
-        --cache-from type=gha,scope=hamster
-        --cache-to type=gha,scope=hamster
-        --load --builder=container .
+      run: ./hamster/test.sh
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Build and push
+      uses: docker/build-push-action@v6
+      with:
+        file: "{context}/hamster/Dockerfile"
+        push: false
+        load: true
+        tags: hamster:test
+        cache-from: type=gha,scope=hamster
+        cache-to: type=gha,mode=max,scope=hamster
     - name: Run container to test
       working-directory: ./hamster
       run: ./test.sh docker

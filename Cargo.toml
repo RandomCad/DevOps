@@ -1,0 +1,11 @@
+[workspace]
+resolver = "2"
+members = ["hamster", "chamaeleon"]
+
+[workspace.dependencies]
+markdown = "1.0.0-alpha.22"
+rocket = "0.5.1"
+
+[profile.release]
+strip = true
+lto = "thin"
