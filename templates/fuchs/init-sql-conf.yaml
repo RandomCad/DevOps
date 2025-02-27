@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fuchs-db-init-sql
+  labels:
+    app: fuchs-db
+data:
+{{ (.Files.Glob "fuchs/init.sql").AsConfig | indent 2 }}

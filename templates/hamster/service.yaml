@@ -1,0 +1,8 @@
+{{ template "devnotes.service" .Values.hamster }}
+        volumeMounts:
+        - name: file-vol
+          mountPath: /app/files
+      volumes:
+      - name: file-vol
+        persistentVolumeClaim:
+          claimName: hamster-files
