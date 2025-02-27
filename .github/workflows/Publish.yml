@@ -31,6 +31,7 @@ jobs:
           context: "{{defaultContext}}:chamaeleon"
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/chamaeleon:latest
+          platforms: linux/arm64,linux/amd64
           
   pub_hamster:
     runs-on: ubuntu-latest    
@@ -52,3 +53,4 @@ jobs:
           context: "{{defaultContext}}:hamster"
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/hamster:latest
+          platforms: linux/arm64,linux/amd64
