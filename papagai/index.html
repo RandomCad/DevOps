@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevNotes</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="index.js"></script>
+</head>
+<body class="body">
+    <div class="lb">
+        <div class="kopf">
+            N DevNotes
+        </div>
+        <div class="note_navigator_box">
+            <div class="note_create_bgdiv" onclick="create_new_note()">
+                <div class="note_create_button">
+                    + Neue Notiz
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="note_main">
+        <div class="note_main_header">
+            <div class="note_main_title"></div>
+            <div class="note_main_date"></div>
+        </div>
+        <div class="note_main_second_header">
+            <div class="note_main_author"></div>
+            <div class="note_main_buttons">
+                <div class="note_main_edit">
+                    <img src="images/edit.png" alt="edit", width="30px", height="30px">
+                </div>
+                <div class="note_main_delete">
+                    <img src="images/delete.png" alt="delete", width="30px", height="30px">
+                </div>
+            </div>
+        </div>
+        
+        <div class="note_main_body">
+            
+            <div class="note_main_content">
+
+            </div>
+        </div>
+        <div class="note_files">
+
+        </div>
+    </div>
+</body>
+<script>
+    // window.onload = test_create_note_navigator(5);
+    window.onload = update_all_note_navigator();
+    window.onload = open_note_on_start();
+</script>
+</html>

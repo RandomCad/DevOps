@@ -1,0 +1,159 @@
+:root {
+    --note_navigator_box_with: 240px;
+
+}
+
+.body {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    background-color: blueviolet;
+}
+
+.lb { /* left_box */
+    display: flex;
+    flex-direction: column;
+    width: var(--note_navigator_box_with);
+}
+
+.kopf {
+    margin: 5px;
+    height: 30px;
+    text-align: center;
+    align-content: center;
+    
+    border: 10px inset #FF0000;
+    border-radius: 40px;
+
+    background-color: red;
+}
+
+.note_navigator_box {
+    width: var(--note_navigator_box_with - 10px);
+    height: calc(100vw - 50px);
+
+    display: flex;
+    flex-direction: column;
+
+    background-color: aquamarine;
+
+    font-weight: 500;
+}
+
+.note_create_bgdiv {
+    margin-top: 8px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+
+
+
+    background-color: blue;
+}
+
+.note_create_button {
+    width: calc(var(--note_navigator_box_with) - 10px - 10px);
+
+    height: 30px; 
+    border: 5px inset #FF0000;
+    border-radius: 40px;
+    
+    text-align: center;
+    align-content: center;
+
+    background-color: orange;
+
+}
+
+.note_navigator_bgdiv {
+    margin-top: 8px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+
+
+
+    background-color: blue;
+
+}
+
+.note_navigator {
+    --note_navigator_counter: 100;
+
+    left: var(--note_navigator_left);
+    height: 30px;
+    width: calc(var(--note_navigator_box_with) - 10px - 10px);
+
+    border: 5px solid ;
+    border-radius: 40px;
+    
+    text-align: center;
+    align-content: center;
+}
+
+
+.note_main {
+    margin: 10px;
+    width: calc(100vw - var(--note_navigator_box_with) - 10px);
+    height: calc(100vh - 20px);
+
+    border: 5px solid ;
+    border-radius: 40px;
+
+
+}
+
+.note_main_header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 3px solid;
+    width: 100%;
+
+}
+
+.note_main_title {
+    margin-left: 20px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    
+    font-size: 1.875rem;
+    font-weight: 600;
+}
+
+.note_main_date {
+    margin-right: 5px;
+    margin-bottom: 5px;
+
+    display: flex;
+    align-items: flex-end;
+}
+
+.note_main_second_header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    border-bottom: solid;
+}
+
+.note_main_author {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.note_main_buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.note_main_content {
+    padding: 10px;
+}
