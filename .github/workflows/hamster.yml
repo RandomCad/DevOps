@@ -28,9 +28,11 @@ jobs:
     - name: Run Application Test
       working-directory: ./hamster
       run: ./test.sh
+    - name: Expose GitHub Runtime # needed for docker build with cache
+      uses: crazy-max/ghaction-github-runtime@v3
     - name: docker build
       working-directory: ./hamster
-      run: docker build -t hamster:test .
+      run: docker build -t hamster:test --cache-from type=gha,scope=hamster --cache-to type=gha,scope=hamster .
     - name: Run container to test
       working-directory: ./hamster
       run: ./test.sh docker
