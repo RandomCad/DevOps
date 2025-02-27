@@ -13,6 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Setup cache
+      uses: Swatinem/rust-cache@v2
+      with:
+        shared-key: v0-rust
+        workspaces: "hamster -> target"
     - name: Build
       working-directory: ./hamster
       run: cargo build --verbose
