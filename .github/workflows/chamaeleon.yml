@@ -26,14 +26,10 @@ jobs:
       run: ./test.sh
     - name: docker build
       working-directory: ./chamaeleon
-      run: docker build -t myapp:latest .
+      run: docker build -t chamaeleon:test .
     - name: Run container to test
       working-directory: ./chamaeleon
-      run: |
-        # Run the container and output logs
-        docker run --rm --name test myapp:latest &
-        sleep 3s
-        docker stop test -t 3
+      run: ./test.sh docker
       
   
 
