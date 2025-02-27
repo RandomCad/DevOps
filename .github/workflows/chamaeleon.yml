@@ -19,7 +19,7 @@ jobs:
       uses: Swatinem/rust-cache@v2
       with:
         shared-key: v0-rust
-        workspaces: "chamaeleon -> target
+        workspaces: "chamaeleon -> target"
     - name: Build
       working-directory: ./chamaeleon
       run: cargo build --verbose
