@@ -35,7 +35,10 @@ jobs:
       uses: crazy-max/ghaction-github-runtime@v3
     - name: docker build
       working-directory: ./chamaeleon
-      run: docker build -t chamaeleon:test --cache-from type=gha,scope=hamster --cache-to type=gha,scope=hamster .
+      run: docker build -t chamaeleon:test \
+        --cache-from type=gha,scope=hamster \
+        --cache-to type=gha,scope=hamster \
+        --load --builder=container .
     - name: Run container to test
       working-directory: ./chamaeleon
       run: ./test.sh docker
