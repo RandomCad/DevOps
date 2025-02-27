@@ -4,7 +4,7 @@ RUN apk add --no-cache libc-dev
 
 WORKDIR /
 COPY Cargo.toml Cargo.lock /
-RUN sed -i "s|members = \\[[^\\]]*\\]|members = \\[\\]|g" Cargo.toml; \
+RUN sed -i "s|members = .*|members = []|g" Cargo.toml; \
     cargo new chamaeleon
 WORKDIR /chamaeleon
 COPY chamaeleon/Cargo.toml ./
