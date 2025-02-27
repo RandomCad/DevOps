@@ -30,7 +30,7 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v6
       with:
-        file: "{context}/chamaeleon/Dockerfile"
+        file: "./chamaeleon/Dockerfile"
         push: false
         load: true
         tags: chamaeleon:test

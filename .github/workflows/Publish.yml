@@ -28,7 +28,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: "{{defaultContext}}:chamaeleon"
+          file: "./chamaeleon/Dockerfile"
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/chamaeleon:latest
           platforms: linux/arm64,linux/amd64
@@ -52,7 +52,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: "{{defaultContext}}:hamster"
+          file: "./hamster/Dockerfile"
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/hamster:latest
           platforms: linux/arm64,linux/amd64

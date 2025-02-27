@@ -28,7 +28,7 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v6
       with:
-        file: "{context}/hamster/Dockerfile"
+        file: "./hamster/Dockerfile"
         push: false
         load: true
         tags: hamster:test
