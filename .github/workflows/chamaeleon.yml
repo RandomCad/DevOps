@@ -2,8 +2,6 @@ name: chamaeleon
 
 on:
   workflow_call:  # allow this workflow to be called from other workflows
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
