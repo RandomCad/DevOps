@@ -35,6 +35,7 @@ jobs:
       with:
         file: "./${{ matrix.service }}/Dockerfile"
         push: false
+        outputs: type=cacheonly
         platforms: linux/${{ matrix.platform.name }}
         cache-from: type=gha,scope=${{ matrix.service }}-${{ matrix.platform.name }}
         cache-to: type=gha,mode=max,scope=${{ matrix.service }}-${{ matrix.platform.name }}
