@@ -3,9 +3,6 @@ name: Publish
 on:
   push:
     branches: [ "main" ]
-  # testing
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
     
