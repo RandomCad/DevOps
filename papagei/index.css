@@ -185,6 +185,11 @@
     transform: scale(1.1);
 }
 
+.note_main_buttons button img {
+    width: 30;
+    height: 30;
+}
+
 .note_main_body {
     flex: 1;
     padding: 10px;
