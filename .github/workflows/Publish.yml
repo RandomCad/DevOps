@@ -18,8 +18,8 @@ jobs:
     strategy:
       matrix:
         platform:
-        - runner: ubuntu-latest
-          name: amd64
+        # - runner: ubuntu-latest
+        #   name: amd64
         - runner: ubuntu-24.04-arm
           name: arm64
         service:
@@ -63,6 +63,6 @@ jobs:
         push: true
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:latest
         platforms: linux/arm64,linux/amd64
-        cache-from: |
-          type=gha,scope=${{ matrix.service }}-arm64
-          type=gha,scope=${{ matrix.service }}-amd64
+        cache-from: type=gha,scope=${{ matrix.service }}-arm64
+          # type=gha,scope=${{ matrix.service }}-arm64
+          # type=gha,scope=${{ matrix.service }}-amd64
