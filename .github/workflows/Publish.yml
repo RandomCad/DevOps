@@ -27,16 +27,16 @@ jobs:
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      -
-        name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          file: "./chamaeleon/Dockerfile"
-          push: false
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/chamaeleon:latest
-          platforms: linux/arm64,linux/amd64
-          cache-from: type=gha,scope=chamaeleon
-          cache-to: type=local,mode=max,dest=~/.cache/docker
+      # -
+      #   name: Build and push
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     file: "./chamaeleon/Dockerfile"
+      #     push: false
+      #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/chamaeleon:latest
+      #     platforms: linux/arm64,linux/amd64
+      #     cache-from: type=gha,scope=chamaeleon
+      #     cache-to: type=local,mode=max,dest=~/.cache/docker
       -
         name: Build and push
         uses: docker/build-push-action@v6
@@ -45,7 +45,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/chamaeleon:latest
           platforms: linux/arm64,linux/amd64
-          cache-from: type=local,src=~/.cache/docker
+          # cache-from: type=local,src=~/.cache/docker
           cache-to: type=gha,mode=max,scope=chamaeleon
           
   pub_hamster:
@@ -61,16 +61,16 @@ jobs:
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      -
-        name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          file: "./hamster/Dockerfile"
-          push: false
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/hamster:latest
-          platforms: linux/arm64,linux/amd64
-          cache-from: type=gha,scope=hamster
-          cache-to: type=local,mode=max,dest=~/.cache/docker
+      # -
+      #   name: Build and push
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     file: "./hamster/Dockerfile"
+      #     push: false
+      #     tags: ${{ secrets.DOCKERHUB_USERNAME }}/hamster:latest
+      #     platforms: linux/arm64,linux/amd64
+      #     cache-from: type=gha,scope=hamster
+      #     cache-to: type=local,mode=max,dest=~/.cache/docker
       -
         name: Build and push
         uses: docker/build-push-action@v6
@@ -79,5 +79,5 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/hamster:latest
           platforms: linux/arm64,linux/amd64
-          cache-from: type=local,src=~/.cache/docker
+          # cache-from: type=local,src=~/.cache/docker
           cache-to: type=gha,mode=max,scope=hamster
