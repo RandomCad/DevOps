@@ -40,7 +40,7 @@ jobs:
       - name: Install linter
         working-directory: ./papagei
         run: 
-          npm install jslint
+          npm install -g jslint
       - name: lint JS
         working-directory: ./papagei
         run:
