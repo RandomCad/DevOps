@@ -34,8 +34,8 @@ jobs:
         push: false
         load: true
         tags: chamaeleon:test
-        cache-from: type=gha,scope=chamaeleon-amd64
-        cache-to: type=gha,mode=max,scope=chamaeleon-amd64
+        cache-from: type=gha,scope=chamaeleon
+        cache-to: type=gha,mode=max,scope=chamaeleon
     - name: Run container to test
       working-directory: ./chamaeleon
       run: ./test.sh docker

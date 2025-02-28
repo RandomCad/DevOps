@@ -37,8 +37,8 @@ jobs:
         push: false
         outputs: type=cacheonly
         platforms: linux/${{ matrix.platform.name }}
-        cache-from: type=gha,scope=${{ matrix.service }}-${{ matrix.platform.name }}
-        cache-to: type=gha,mode=max,scope=${{ matrix.service }}-${{ matrix.platform.name }}
+        cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:buildcache-${{ matrix.platform.name }}
+        cache-to: type=registry,mode=max,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:buildcache-${{ matrix.platform.name }}
   
   publish_images:
     strategy:
@@ -64,5 +64,5 @@ jobs:
         tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:latest
         platforms: linux/arm64,linux/amd64
         cache-from: |
-          type=gha,scope=${{ matrix.service }}-arm64
-          type=gha,scope=${{ matrix.service }}-amd64
+          type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:buildcache-arm64
+          type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.service }}:buildcache-amd64

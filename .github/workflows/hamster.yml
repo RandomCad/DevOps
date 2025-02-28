@@ -32,8 +32,8 @@ jobs:
         push: false
         load: true
         tags: hamster:test
-        cache-from: type=gha,scope=hamster-amd64
-        cache-to: type=gha,mode=max,scope=hamster-amd64
+        cache-from: type=gha,scope=hamster
+        cache-to: type=gha,mode=max,scope=hamster
     - name: Run container to test
       working-directory: ./hamster
       run: ./test.sh docker
