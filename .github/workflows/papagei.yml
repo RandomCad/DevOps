@@ -38,6 +38,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Install linter
+        working-directory: ./papagei
         run: 
           npm install jslint
       - name: lint JS
@@ -52,6 +53,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Install linter
+        working-directory: ./papagei
         run: 
           npm init stylelint          
       - name: lint CSS
