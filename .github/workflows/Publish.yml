@@ -32,7 +32,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/chamaeleon:latest
           platforms: linux/arm64,linux/amd64
-          # cache-from: type=gha,scope=chamaeleon
+          cache-from: type=gha,scope=chamaeleon
           cache-to: type=gha,mode=max,scope=chamaeleon
           
   pub_hamster:
@@ -56,5 +56,5 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/hamster:latest
           platforms: linux/arm64,linux/amd64
-          # cache-from: type=gha,scope=hamster
+          cache-from: type=gha,scope=hamster
           cache-to: type=gha,mode=max,scope=hamster
