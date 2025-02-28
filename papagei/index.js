@@ -16,6 +16,7 @@ tbd:
 */
 
 // note navigator
+"use strict";
 
 function create_note_navigator(note_id, title) {
     var div = document.createElement("div");
