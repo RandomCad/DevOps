@@ -1,57 +1,56 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DevNotes</title>
-    <link rel="stylesheet" href="index.css">
-    <script src="index.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
-</head>
-<body class="body">
-    <aside class="lb">
-        <header class="kopf">
-            N DevNotes
-        </header>
-        <div class="note_create_bgdiv" onclick="create_new_note()">
-            <div class="note_create_button">
-                + Neue Notiz
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>DevNotes</title>
+        <link rel="stylesheet" href="index.css">
+        <script src="index.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
+    </head>
+    <body class="body">
+        <aside class="lb">
+            <header class="kopf">
+                N DevNotes
+            </header>
+            <div class="note_create_bgdiv" onclick="create_new_note()">
+                <div class="note_create_button">
+                    + Neue Notiz
+                </div>
             </div>
-        </div>
-        <nav class="note_navigator_box">
-        </nav>
-    </aside>
-    <main class="note_main">
-        <div class="note_main_header">
-            <h1 class="note_main_title"></h1>
-            <time class="note_main_date">1.1.2332</time>
-        </div>
-        <div class="note_main_second_header">
-            <div class="note_main_author"></div>
-            <div class="note_main_buttons">
-                <button class="note_main_edit">
-                    <img src="images/edit.png" alt="edit", width="30", height="30">
-                </button>
-                <button class="note_main_delete">
-                    <img src="images/delete.png" alt="delete", width="30", height="30">
-                </button>
+            <nav class="note_navigator_box">
+            </nav>
+        </aside>
+        <main class="note_main">
+            <div class="note_main_header">
+                <h1 class="note_main_title"></h1>
+                <time class="note_main_date">1.1.2332</time>
             </div>
-        </div>
-        
-        <article class="note_main_body">
-            <div class="note_main_content">
+            <div class="note_main_second_header">
+                <div class="note_main_author"></div>
+                <div class="note_main_buttons">
+                    <button class="note_main_edit">
+                        <img src="images/edit.png" alt="edit">
+                    </button>
+                    <button class="note_main_delete">
+                        <img src="images/delete.png" alt="delete">
+                    </button>
+                </div>
             </div>
-        </article>
-        <div class="note_files">
-        </div>
-    </main>
-    <script>
-    // window.onload = test_create_note_navigator(5);
-    window.onload = function() {
-      update_all_note_navigator();
-      open_note_on_start();
-    };
-    </script>
-</body>
 
+            <article class="note_main_body">
+                <div class="note_main_content">
+                </div>
+            </article>
+            <div class="note_files">
+            </div>
+        </main>
+        <script>
+        // window.onload = test_create_note_navigator(5);
+        window.onload = function() {
+          update_all_note_navigator();
+          open_note_on_start();
+        };
+        </script>
+    </body>
 </html>
