@@ -22,10 +22,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install linter
-        run:
+      - name: Install linters
+        run: |
           npm install @linthtml/linthtml --save-dev
-      - name: lint
+          npm install jslint
+          npm init stylelint
+
+      - name: lint html
         working-directory: ./papagei
         run:
           npx linthtml 'index.html'
+          
+      - name: lint JS
+        working-directory: ./papagei
+        run:
+          jslint index.js
+          
+      - name: lint CSS
+        working-directory: ./papagei
+        run:
+          npx stylelint "**/*.css"
