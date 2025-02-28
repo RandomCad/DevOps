@@ -25,9 +25,6 @@ jobs:
       - name: Install linter
         run:
           npm install @linthtml/linthtml --save-dev
-      - name: create config
-        run:
-          npx linthtml --init
       - name: lint
         working-directory: ./papagei
         run:
