@@ -2,10 +2,10 @@ FROM python:3
 
 WORKDIR /usr/src/app
 
-COPY requirements.txt ./
+COPY fuchs/requirements.txt ./
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-COPY . .
+COPY fuchs .
 
 EXPOSE 8000
 
