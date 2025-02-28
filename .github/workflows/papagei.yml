@@ -15,29 +15,45 @@ on:
     branches: [ "main" ]
 
 jobs:
-  lint_papagei:
-    name: lint papagei
+  lint_html_papagei:
+    name: lint HTML papagei
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Install linters
-        run: |
+      - name: Install linter
+        run: 
           npm install @linthtml/linthtml --save-dev
-          npm install jslint
-          npm init stylelint
-
       - name: lint html
         working-directory: ./papagei
         run:
           npx linthtml 'index.html'
           
+          
+      
+  lint_js_papagei:
+    name: lint JS papagei
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install linter
+        run: 
+          npm install jslint
       - name: lint JS
         working-directory: ./papagei
         run:
           jslint index.js
-          
+
+  lint_css_papagei:
+    name: lint CSS papagei
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Install linter
+        run: 
+          npm init stylelint          
       - name: lint CSS
         working-directory: ./papagei
         run:
