@@ -6,51 +6,52 @@
     <title>DevNotes</title>
     <link rel="stylesheet" href="index.css">
     <script src="index.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
 </head>
 <body class="body">
-    <div class="lb">
-        <div class="kopf">
+    <aside class="lb">
+        <header class="kopf">
             N DevNotes
-        </div>
-        <div class="note_navigator_box">
-            <div class="note_create_bgdiv" onclick="create_new_note()">
-                <div class="note_create_button">
-                    + Neue Notiz
-                </div>
+        </header>
+        <div class="note_create_bgdiv" onclick="create_new_note()">
+            <div class="note_create_button">
+                + Neue Notiz
             </div>
         </div>
-    </div>
-    <div class="note_main">
+        <nav class="note_navigator_box">
+        </nav>
+    </aside>
+    <main class="note_main">
         <div class="note_main_header">
-            <div class="note_main_title"></div>
-            <div class="note_main_date"></div>
+            <h1 class="note_main_title"></h1>
+            <time class="note_main_date">1.1.2332</time>
         </div>
         <div class="note_main_second_header">
             <div class="note_main_author"></div>
             <div class="note_main_buttons">
-                <div class="note_main_edit">
-                    <img src="images/edit.png" alt="edit", width="30px", height="30px">
-                </div>
-                <div class="note_main_delete">
-                    <img src="images/delete.png" alt="delete", width="30px", height="30px">
-                </div>
+                <button class="note_main_edit">
+                    <img src="images/edit.png" alt="edit", width="30", height="30">
+                </button>
+                <button class="note_main_delete">
+                    <img src="images/delete.png" alt="delete", width="30", height="30">
+                </button>
             </div>
         </div>
         
-        <div class="note_main_body">
-            
+        <article class="note_main_body">
             <div class="note_main_content">
-
             </div>
-        </div>
+        </article>
         <div class="note_files">
-
         </div>
-    </div>
-</body>
-<script>
+    </main>
+    <script>
     // window.onload = test_create_note_navigator(5);
-    window.onload = update_all_note_navigator();
-    window.onload = open_note_on_start();
-</script>
+    window.onload = function() {
+      update_all_note_navigator();
+      open_note_on_start();
+    };
+    </script>
+</body>
+
 </html>
