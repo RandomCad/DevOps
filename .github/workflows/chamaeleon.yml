@@ -1,0 +1,44 @@
+name: chamaeleon
+
+on:
+  workflow_call:  # allow this workflow to be called from other workflows
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build_chamaeleon:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup cache
+      uses: Swatinem/rust-cache@v2
+      with:
+        shared-key: shared
+    - name: Build
+      run: cargo build --verbose -p chamaeleon
+    - name: Run Unit Test
+      run: cargo test --verbose -p chamaeleon
+    - name: Run Application Test
+      run: ./chamaeleon/test.sh
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Build and push
+      uses: docker/build-push-action@v6
+      with:
+        file: "./chamaeleon/Dockerfile"
+        push: false
+        load: true
+        tags: chamaeleon:test
+        cache-from: type=gha,scope=chamaeleon
+        cache-to: type=gha,mode=max,scope=chamaeleon
+    - name: Run container to test
+      working-directory: ./chamaeleon
+      run: ./test.sh docker
+      
+  
+
