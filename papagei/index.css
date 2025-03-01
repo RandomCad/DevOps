@@ -1,7 +1,8 @@
+/* stylelint-disable selector-class-pattern */
 :root {
-    --note_navigator_with: 240px;
-    --note_background: rgba(255, 255, 255, 0.9);
-    --font_family: 'Open Sans', sans-serif;
+    --note-navigator-with: 240px;
+    --note-background: rgb(255 255 255/ 90%);
+    --font-family: 'Open Sans', sans-serif;
 }
 
 .body {
@@ -11,70 +12,59 @@
     width: 100vw;
     margin: 0;
     padding: 0;
-    font-family: var(--font_family);
+    font-family: var(--font-family);
     background-image: url('./images/parrot_wp_1.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }
 
-.lb { /* left_box */
+.lb {
+    /* left_box */
     display: flex;
     flex-direction: column;
-    width: var(--note_navigator_with);
+    width: var(--note-navigator-with);
 }
 
 .kopf {
     margin: 5px;
     padding: 15px;
     text-align: center;
-
     font-size: 1.2rem;
     font-weight: 700;
     color: #fff;
-    
     border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-
+    box-shadow: 0 2px 4px rgb(0 0 0/ 10%);
     background-color: red;
 }
 
 .note_navigator_box {
-    width: var(--note_navigator_with - 10px);
+    width: calc(var(--note-navigator-with) - 10px);
     height: calc(100vw - 50px);
-
     display: flex;
     flex-direction: column;
-
     font-weight: 500;
     overflow-y: auto;
 }
 
 .note_create_bgdiv {
     margin-top: 8px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding: 2px 5px;
     cursor: pointer;
 }
 
 .note_create_bgdiv:hover {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgb(255 255 255/ 50%);
 }
 
 .note_create_button {
-    width: calc(var(--note_navigator_with) - 10px - 2px);
-
-    height: 35px; 
+    width: calc(var(--note-navigator-with) - 10px - 2px);
+    height: 35px;
     border: 1px solid white;
     border-radius: 12px;
-    
     text-align: center;
     align-content: center;
-
     background-color: orange;
-
     transition: background 0.3s ease, transform 0.2s;
 }
 
@@ -85,32 +75,22 @@
 
 .note_navigator_bgdiv {
     margin-top: 8px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding: 2px 5px;
     cursor: pointer;
+    background-color: blue;
 }
 
 .note_navigator_bgdiv:hover {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgb(255 255 255/ 50%);
 }
 
 .note_navigator {
-    --note_navigator_counter: 100;
-
-    left: var(--note_navigator_left);
     height: 35px;
-    width: calc(var(--note_navigator_with) - 10px - 0px);
-
-
+    width: calc(var(--note-navigator-with) - 10px - 0px);
     border-radius: 40px;
-    
     text-align: center;
     align-content: center;
-
-    background-color: var(--note_background);
-
+    background-color: var(--note-background);
     transition: background 0.3s ease, transform 0.2s;
 }
 
@@ -124,8 +104,8 @@
     margin: 10px;
     padding: 20px;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
-    background-color: var(--note_background);
+    box-shadow: 0 2px 8px rgb(0 0 0/ 50%);
+    background-color: var(--note-background);
     display: flex;
     flex-direction: column;
 }
@@ -186,15 +166,15 @@
 }
 
 .note_main_buttons button img {
-    width: 30;
-    height: 30;
+    width: 30px;
+    height: 30px;
 }
 
 .note_main_body {
     flex: 1;
     padding: 10px;
     overflow-y: auto;
-  }
+}
 
 .note_main_content {
     font-size: 1rem;
@@ -203,4 +183,4 @@
 
 .note_files {
     margin-top: 10px;
-  }
+}
