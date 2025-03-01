@@ -39,7 +39,7 @@
 }
 
 .note_navigator_box {
-    width: calc(var(--note-navigator-with) - 10px);
+    width: var(--note-navigator-with);
     height: calc(100vw - 50px);
     display: flex;
     flex-direction: column;
@@ -77,7 +77,6 @@
     margin-top: 8px;
     padding: 2px 5px;
     cursor: pointer;
-    background-color: blue;
 }
 
 .note_navigator_bgdiv:hover {
