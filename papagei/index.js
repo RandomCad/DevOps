@@ -6,9 +6,9 @@ tbd:
     note navigator updaten mit daten von api:
         get_all_note_navigator
 
-    
+
     onclick_note_navigator
-    
+
     open_note
 
     edit
@@ -74,8 +74,6 @@ function create_new_note() {
 }
 
 function open_note(id, title, date, content, author) {
-    
-
     show_note_title(title);
     show_note_author(date)
     show_note_author(author);
@@ -111,9 +109,9 @@ function get_note_by_id(note_id) {
 function open_note_by_id(note_id) {
     get_note_by_id(note_id)
         .then(data => {
-            open_note(id=data.id, 
-                title=data.title, 
-                date=data.date, 
+            open_note(id=data.id,
+                title=data.title,
+                date=data.date,
                 content=data.content,
                 author=data.author);
         });
@@ -133,7 +131,7 @@ function open_note_on_start() {
 }
 
 function check_if_note_needs_to_be_saved(params) {
-    
+
 }
 
 
@@ -183,6 +181,6 @@ function get_example_all_note_navigator() {
 function test_create_note_navigator(n) {
     for (let index = 1; index <= n; index++) {
         create_note_navigator(index, 'Note '+index);
-        
+
     }
 }
