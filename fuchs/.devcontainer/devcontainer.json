@@ -14,11 +14,11 @@
 			"settings": {
 				"terminal.integrated.shell.linux": "/bin/bash",
 				"python.pythonPath": "/usr/local/bin/python",
-				"python.linting.enabled": true,
-				"python.linting.pylintEnabled": true,
-				"python.linting.pylintPath": "/usr/local/bin/pylint",
-				"python.linting.pylintInterpreter": "/usr/local/bin/python",
-				"python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8"
+				"python.linting.enabled": true
+				// "python.linting.pylintEnabled": true,
+				// "python.linting.pylintPath": "/usr/local/bin/pylint",
+				// "python.linting.pylintInterpreter": "/usr/local/bin/python",
+				// "python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8"
 				// "python.formatting.blackPath": "/usr/local/py-utils/bin/black",
 				// "python.formatting.yapfPath": "/usr/local/py-utils/bin/yapf",
 				// "python.linting.banditPath": "/usr/local/py-utils/bin/bandit",
@@ -30,9 +30,9 @@
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
 				"ms-python.python",
-				"ms-python.autopep8",
-				"ms-python.pylint",
+				"charliermarsh.ruff",
 				"ms-azuretools.vscode-docker",
+				"redhat.vscode-yaml",
 				"github.copilot"
 			]
 		}
