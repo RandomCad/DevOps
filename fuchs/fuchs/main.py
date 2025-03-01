@@ -3,14 +3,14 @@
 from fastapi import FastAPI, Depends
 import requests
 
-from fuchs import (
-    DatabaseConnection,
+from . import (
     URL_HAMSTER,
     DB_NAME,
     DB_USER,
     DB_PASSWORD,
     DB_HOST,
 )  # , URL_CHAMELEON
+from .database import DatabaseConnection
 
 app = FastAPI()
 
