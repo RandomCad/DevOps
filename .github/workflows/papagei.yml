@@ -37,10 +37,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: install linter
+        working-directory: ./papagei
+        run:
+          npm install eslint
       - name: lint JS
         working-directory: ./papagei
         run:
-          eslint . --ext .js
+          npx eslint index.js
 
   lint_css_papagei:
     name: lint CSS papagei
