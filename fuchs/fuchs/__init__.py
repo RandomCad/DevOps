@@ -7,4 +7,4 @@ DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_HOST = os.getenv("DB_HOST")
 
 URL_HAMSTER = os.getenv("URL_HAMSTER")
-# URL_CHAMELEON = os.getenv("URL_CHAMELEON")
+URL_CHAMAELEON = os.getenv("URL_CHAMAELEON")

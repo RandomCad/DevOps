@@ -9,7 +9,8 @@ from . import (
     DB_USER,
     DB_PASSWORD,
     DB_HOST,
-)  # , URL_CHAMELEON
+    URL_CHAMAELEON,
+)
 from .database import DatabaseConnection
 
 app = FastAPI()
@@ -40,13 +41,17 @@ def read_note(note_id: int, db: DatabaseConnection = Depends(get_db)):
     of the note"""
     note_content_md = db.read_note(note_id)
     pic_data = db.read_all_meta_of_pictures(note_id)
-    pics = [{"id": pic[0], "name": pic[1], "alt_text": pic[2]} for pic in pic_data]
+    pics = [
+        {"id": pic[0], "name": pic[1], "alt_text": pic[2]} for pic in pic_data
+    ]
     return {"id": note_id, "content": note_content_md, "pictures": pics}
 
 
 @app.post("/notes/")
 def create_note(
-    note_title: str, note_content_md: str, db: DatabaseConnection = Depends(get_db)
+    note_title: str,
+    note_content_md: str,
+    db: DatabaseConnection = Depends(get_db),
 ):
     """creates a new note.\n
     takes the markdown content of the note as input, converts it to html and
@@ -70,7 +75,9 @@ def create_note(
     assert r.status_code == 200
 
     # safe the path to the note in the db
-    affected_rows = db.update_note(note_id, note_title, note_content_md, note_path)
+    affected_rows = db.update_note(
+        note_id, note_title, note_content_md, note_path
+    )
     assert affected_rows == 1, f"affected_rows: {affected_rows}"
 
     return {"status": "created", "id": note_id, "path": note_path}
@@ -91,7 +98,9 @@ def update_note(
 
     note_path = f"note_{note_id}"
     # safe the markdown
-    affected_rows = db.update_note(note_id, note_title, note_content_md, note_path)
+    affected_rows = db.update_note(
+        note_id, note_title, note_content_md, note_path
+    )
     assert affected_rows == 1, f"affected_rows: {affected_rows}"
 
     note_path = f"note_{note_id}"
@@ -121,6 +130,7 @@ def delete_note(note_id: int, db: DatabaseConnection = Depends(get_db)):
     return {"status": "deleted"}
 
 
+# TODO: test this
 @app.post("/notes/{note_id}/pics/")
 def store_picture(
     note_id: int,
@@ -160,14 +170,18 @@ def update_picture(
     r = requests.put(url, data=pic_content, timeout=10)
     assert r.status_code == 200
 
-    affected_rows = db.update_meta_of_picture(pic_id, pic_name, pic_alt_text, pic_path)
+    affected_rows = db.update_meta_of_picture(
+        pic_id, pic_name, pic_alt_text, pic_path
+    )
     assert affected_rows == 1
 
     return {"status": "updated", "path": pic_path}
 
 
 @app.delete("/notes/{note_id}/pics/{pic_id}")
-def delete_pic(pic_id: int, pic_path: str, db: DatabaseConnection = Depends(get_db)):
+def delete_pic(
+    pic_id: int, pic_path: str, db: DatabaseConnection = Depends(get_db)
+):
     """deletes a picture and its metadata."""
     affected_rows = db.remove_meta_of_picture(pic_id)
     assert affected_rows == 1
@@ -181,7 +195,8 @@ def delete_pic(pic_id: int, pic_path: str, db: DatabaseConnection = Depends(get_
 
 def convert_md_to_html(md: str) -> str:
     """converts markdown to html"""
-    # r = requests.post(f"http://{URL_CHAMELEON}/", data=md, timeout=10)
-    # assert r.status_code == 200
-    # return r.text
-    return md
+    # TODO test this
+    r = requests.post(f"{URL_CHAMAELEON}/", data=md, timeout=10)
+    assert r.status_code == 200
+    return r.text
+    # return md
