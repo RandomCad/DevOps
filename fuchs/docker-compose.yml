@@ -34,20 +34,20 @@ services:
     image: balindner/hamster
     build:
       dockerfile: ./hamster/Dockerfile
-      cache-from: type=gha,scope=hamster
+      cache_from: type=gha,scope=hamster
     ports:
     - "127.0.0.1:8001:8000"
   chamaeleon:
     image: balindner/chamaeleon
     build:
       dockerfile: ./chamaeleon/Dockerfile
-      cache-from: type=gha,scope=chamaeleon
+      cache_from: type=gha,scope=chamaeleon
     ports:
     - "127.0.0.1:8002:8000"
   fuchs:
     build:
       dockerfile: ./fuchs/Dockerfile
-      cache-from: type=gha,scope=fuchs
+      cache_from: type=gha,scope=fuchs
     profiles:
     - full_test
     ports:
