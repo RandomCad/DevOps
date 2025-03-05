@@ -38,6 +38,18 @@
     background-color: red;
 }
 
+.kopf img {
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    padding: 5px;
+}
+
+.logo {
+    padding: 10px;
+    width: calc(var(--note-navigator-with) - 20px);
+}
+
 .note_navigator_box {
     width: var(--note-navigator-with);
     height: calc(100vw - 50px);
