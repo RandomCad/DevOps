@@ -1,4 +1,4 @@
-use std::{path::PathBuf, io};
+use std::{fs, io, path::PathBuf};
 
 use rocket::{delete, fs::{FileServer, TempFile}, launch, put, routes, State};
 
@@ -6,7 +6,11 @@ static FILE_PATH: &str = "./files";
 
 #[put("/<path..>", data = "<file>")]
 async fn set_file(path: PathBuf, mut file: TempFile<'_>, base: &State<PathBuf>) -> io::Result<()> {
-    file.persist_to(base.join(path)).await
+    let full = base.join(path);
+    if let Some(p) = full.parent() {
+        fs::create_dir_all(p)?;
+    }
+    file.copy_to(full).await
 }
 
 #[delete("/<path..>")]
