@@ -12,7 +12,9 @@ tbd:
     open_note
 
     edit
-    save
+    save_node
+
+    delete_note_main -> tell api to delete note with note_id
 */
 
 // note navigator
@@ -36,7 +38,7 @@ function create_note_navigator(note_id, title) {
         div_bg.appendChild(div);
     }
     else {
-        console.log('create_note_navigator: no element with class "note_navigator_box" found');
+        console.error('create_note_navigator: no element with class "note_navigator_box" found');
     }
 }
 
@@ -46,6 +48,7 @@ function get_all_note_navigator() {
 }
 
 function update_all_note_navigator() {
+    document.querySelectorAll(".note_navigator_bgdiv").forEach(element => element.remove());
     get_all_note_navigator()
         .then(data=>{
             console.log(data);
@@ -73,12 +76,12 @@ function create_new_note() {
     open_note(0, 'Neue Notiz', 'Hier ist Platz für Ihre Ideen und Gedanken', 'Lollo');
 }
 
-function open_note(id, title, date, content, author) {
+function open_note(note_id, title, date, content, author) {
     show_note_title(title);
     show_note_author(date)
     show_note_author(author);
     show_note_content(content);
-
+    set_note_main_id(note_id);
 }
 
 function show_note_title(title) {
@@ -109,11 +112,11 @@ function get_note_by_id(note_id) {
 function open_note_by_id(note_id) {
     get_note_by_id(note_id)
         .then(data => {
-            open_note(id=data.id,
-                title=data.title,
-                date=data.date,
-                content=data.content,
-                author=data.author);
+            open_note(data.id,
+                data.title,
+                data.date,
+                data.content,
+                data.author);
         });
 }
 
@@ -121,7 +124,7 @@ function open_note_by_id(note_id) {
 
 
 function open_note_on_start() {
-    note_navigator = document.getElementsByClassName("note_navigator")[0];
+    var note_navigator = document.getElementsByClassName("note_navigator")[0];
     if (note_navigator) {
         open_note_by_id(note_navigator.getAttribute("note_id"));
     }
@@ -131,14 +134,112 @@ function open_note_on_start() {
 }
 
 function check_if_note_needs_to_be_saved(params) {
-
+    if (check_note_main_edit_mode == true) {
+        if (confirm("Es gibt ungespeicherte Änderungen.\nSoll die Notiz gespeichert werden)")) {
+            save_node();
+        }
+    }
+    // note wird nicht editiert und muss entsprechend nicht gespeichert werden
 }
 
+function save_node() {
+    
+}
 
+function set_note_main_edit_mode() {
+    var note_main = document.getElementsByClassName("note_main")[0];
+    if (!note_main) {
+        console.error('set_note_main_id: no element with class "note_main" found');
+        show_error_and_reload();
+    }
+    else {
+        note_main.setAttribute("edit", true);
+    }
+}
 
+function clear_note_main_edit_mode() {
+    var note_main = document.getElementsByClassName("note_main")[0];
+    if (!note_main) {
+        console.error('set_note_main_id: no element with class "note_main" found');
+        show_error_and_reload();
+    }
+    else {
+        note_main.removeAttribute("edit");
+    }
+}
 
+function check_note_main_edit_mode() {
+    var note_main = document.getElementsByClassName("note_main")[0];
+    if (!note_main) {
+        console.error('set_note_main_id: no element with class "note_main" found');
+        show_error_and_reload();
+    }
+    else {
+        if (note_main.getAttribute("edit") == true) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+}
 
+function set_note_main_id(note_id) {
+    var note_main = document.getElementsByClassName("note_main")[0];
+    if (!note_main) {
+        console.error('set_note_main_id: no element with class "note_main" found');
+        show_error_and_reload();
+    }
+    else {
+        note_main.setAttribute("note_id", note_id);
+    }
+}
 
+function get_note_main_id() {
+    var note_main = document.getElementsByClassName("note_main")[0];
+    if (!note_main) {
+        console.error('get_note_main_id: no element with class "note_main" found');
+        show_error_and_reload();
+    }
+    else {
+        var note_id = note_main.getAttribute("note_id");
+        if (!note_id) {
+        console.error('get_note_main_id: element with class "note_main" has no attribute "note_id"');
+        show_error_and_reload();
+        } 
+        else {
+            return note_id;
+        }
+    }
+}
+
+function clear_note_main_id() {
+    var note_main = document.getElementsByClassName("note_main")[0];
+    if (!note_main) {
+        console.error('clear_note_main_id: no element with class "note_main" found');
+        show_error_and_reload();
+    }
+    else {
+        note_main.removeAttribute("note_id");
+    }
+}
+
+function delete_note() {
+    var note_id = get_note_main_id();
+    if (note_id) {
+        // tell api to delete note with note_id
+        clear_note_main_id();
+        clear_note_main_edit_mode();
+        create_new_note();
+        update_all_note_navigator();
+    }
+}
+
+function show_error_and_reload(message = "Ein Fehler ist aufgetreten! Seite neu laden?") {
+    if (confirm(message)) {
+        location.reload();
+    }
+}
 
 
 // example functions
