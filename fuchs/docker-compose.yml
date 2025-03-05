@@ -8,14 +8,14 @@
 #
 # usage:
 # - local testing:
-#   docker compose -f fuchs/docker-compose.yml up --project-directory . -d --pull always
+#   docker compose -f fuchs/docker-compose.yml --project-directory . up -d --pull always
 # - testing in ci:
-#   docker compose -f fuchs/docker-compose.yml up --project-directory . -d --build
+#   docker compose -f fuchs/docker-compose.yml --project-directory . up -d --build
 # - testing image in ci:
-#   docker compose -f fuchs/docker-compose.yml up --project-directory . -d --build --profile full_test
+#   docker compose -f fuchs/docker-compose.yml --project-directory . --profile full_test up -d --build
 #
 # - stopping:
-#   docker compose -f fuchs/docker-compose.yml down --profile "*"
+#   docker compose -f fuchs/docker-compose.yml --project-directory . --profile "*" down
 #
 # this compose stack starts:
 # - fuchs_db:
