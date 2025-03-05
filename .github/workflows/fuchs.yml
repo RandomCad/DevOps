@@ -38,6 +38,6 @@ jobs:
         cache-from: type=gha,scope=hamster
     - name: Run UnitTests
       run: |
-        docker run hamster:test &
+        docker compose up &
         sleep 1
         python -m unittest ./fuchs/tests/test_database.py ./fuchs/tests/test_main.py
