@@ -51,6 +51,7 @@ assert 200 $(curl -s -o /dev/null -X PUT localhost:8000/__long/path/to/file2.txt
 
 finish
 
+ls -la files
 if [[ $(cat files/__long/path/to/file.txt) != "test3" ]]; then
     echo "file vanished"
     exit 1
