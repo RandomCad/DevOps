@@ -1,26 +1,33 @@
 # compose file for testing fuchs
+#
+# This compose stack is used to start all necessary services to test fuchs,
+# which includes hamster, chamaeleon and fuchs-db. They are either pulled
+# from DockerHub (local testing) ore built from Dockerfile (ci).
+# Additionally, by using `--profile full_test`, fuchs can also be started
+# as a container.
+#
 # usage:
 # - local testing:
-#   docker compose up --pull always -d
+#   docker compose -f fuchs/docker-compose.yml up --project-directory . -d --pull always
 # - testing in ci:
-#   docker compose up --build -d
+#   docker compose -f fuchs/docker-compose.yml up --project-directory . -d --build
 # - testing image in ci:
-#   docker compose up --profile full_test --build -d
+#   docker compose -f fuchs/docker-compose.yml up --project-directory . -d --build --profile full_test
 #
 # - stopping:
-#   docker compose down --profile "*"
+#   docker compose -f fuchs/docker-compose.yml down --profile "*"
 #
 # this compose stack starts:
 # - fuchs_db:
 #   always started
 # - hamster:
-#   either started from dockerhub (local testing) or built from Dockerfile (ci)
+#   either started from DockerHub (local testing) or built from Dockerfile (ci)
 # - chamaeleon:
-#   either started from dockerhub (local testing) or built from Dockerfile (ci)
+#   either started from DockerHub (local testing) or built from Dockerfile (ci)
 # - fuchs:
 #   built from Dockerfile if `--profile full_test` is set
 #
-# local testing urls:
+# local testing environment variables:
 #   DB_NAME=fuchs_db
 #   DB_PASSWORD=postgres
 #   DB_USER=postgres
