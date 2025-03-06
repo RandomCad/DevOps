@@ -14,7 +14,11 @@
 			"settings": {
 				"terminal.integrated.shell.linux": "/bin/bash",
 				"python.pythonPath": "/usr/local/bin/python",
-				"python.linting.enabled": true
+				"python.linting.enabled": true,
+				"ruff.lineLength": 80,
+				"ruff.enable": true,
+				"ruff.lint.enable": true,
+				"ruff.format.enable": true
 				// "python.linting.pylintEnabled": true,
 				// "python.linting.pylintPath": "/usr/local/bin/pylint",
 				// "python.linting.pylintInterpreter": "/usr/local/bin/python",
@@ -31,8 +35,9 @@
 			"extensions": [
 				"ms-python.python",
 				"charliermarsh.ruff",
+				"davidanson.vscode-markdownlint",
+				"yzhang.markdown-all-in-one",
 				"ms-azuretools.vscode-docker",
-				"redhat.vscode-yaml",
 				"github.copilot"
 			]
 		}

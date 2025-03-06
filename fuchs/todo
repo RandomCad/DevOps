@@ -1,0 +1,17 @@
+# TODOs for the fuchs
+
+## Core-programm
+
+### main.py
+
+* [X] reimplement file upload using fastapis UploadFile
+  * [X] implemented interfaces
+  * [X] test
+* [ ] get rid of multiple implementation of note_path- & media_path-generation
+* [ ] evalute async functions and implement them
+* [ ] implement more detailed openapi-conf
+
+## Tests
+
+* [ ] move integration test (now in test_main.py) to new file and create "real"
+unittest for main (using mocked stuff)  

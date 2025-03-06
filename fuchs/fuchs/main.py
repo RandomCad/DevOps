@@ -1,17 +1,19 @@
 """defining the API endpoints for the notes application"""
 
-from fastapi import FastAPI, Depends
 import requests
 
+from fastapi import FastAPI, Depends, UploadFile
+
 from . import (
-    URL_HAMSTER,
     DB_NAME,
     DB_USER,
     DB_PASSWORD,
     DB_HOST,
+    URL_HAMSTER,
     URL_CHAMAELEON,
 )
 from .database import DatabaseConnection
+
 
 app = FastAPI()
 
@@ -40,11 +42,9 @@ def read_note(note_id: int, db: DatabaseConnection = Depends(get_db)):
     """returns the markdown content of a note plus the metadata of pictures
     of the note"""
     note_content_md = db.read_note(note_id)
-    pic_data = db.read_all_meta_of_pictures(note_id)
-    pics = [
-        {"id": pic[0], "name": pic[1], "alt_text": pic[2]} for pic in pic_data
-    ]
-    return {"id": note_id, "content": note_content_md, "pictures": pics}
+    media_data = db.read_all_meta_of_media(note_id)
+    media = [{"id": pic[0], "path": pic[1]} for pic in media_data]
+    return {"id": note_id, "content": note_content_md, "pictures": media}
 
 
 @app.post("/notes/")
@@ -57,9 +57,6 @@ def create_note(
     takes the markdown content of the note as input, converts it to html and
     stores the markdown in the db and distributes the html over the hamster.\n
     returns the path to the note for the hamster"""
-    # TODO implement a way to auto integrate pictures in the markdown
-    # (atm the papagei has to first upload the picture and then integrate it in
-    # the markdown, which isn't clean)
 
     # convert to html
     note_content_html = convert_md_to_html(note_content_md)
@@ -67,12 +64,12 @@ def create_note(
     # safe the markdown
     note_id = db.write_note(note_title, note_content_md)
 
-    note_path = f"note_{note_id}"
+    note_path = f"note_{note_id}/web.html"
     url = f"{URL_HAMSTER}/{note_path}"
     # safe the html on the hamster
     r = requests.put(url, data=note_content_html, timeout=10)
 
-    assert r.status_code == 200
+    assert r.status_code == 200, r.text
 
     # safe the path to the note in the db
     affected_rows = db.update_note(
@@ -96,19 +93,18 @@ def update_note(
     # convert to html
     note_content_html = convert_md_to_html(note_content_md)
 
-    note_path = f"note_{note_id}"
+    note_path = f"note_{note_id}/web.html"
     # safe the markdown
     affected_rows = db.update_note(
         note_id, note_title, note_content_md, note_path
     )
     assert affected_rows == 1, f"affected_rows: {affected_rows}"
 
-    note_path = f"note_{note_id}"
     url = f"{URL_HAMSTER}/{note_path}"
     # safe the html on the hamster
     r = requests.put(url, data=note_content_html, timeout=10)
 
-    assert r.status_code == 200
+    assert r.status_code == 200, f"status: {r.status_code}\nmessage: {r.text}"
 
     return {"status": "updated", "id": note_id}
 
@@ -121,7 +117,7 @@ def delete_note(note_id: int, db: DatabaseConnection = Depends(get_db)):
     affected_rows = db.remove_note(note_id)
     assert affected_rows == 1
 
-    note_path = f"note_{note_id}"
+    note_path = f"note_{note_id}/web.html"
     url = f"{URL_HAMSTER}/{note_path}"
     # delete the html on the hamster
     r = requests.delete(url, timeout=10)
@@ -130,63 +126,68 @@ def delete_note(note_id: int, db: DatabaseConnection = Depends(get_db)):
     return {"status": "deleted"}
 
 
-# TODO: test this
-@app.post("/notes/{note_id}/pics/")
-def store_picture(
+@app.post("/notes/{note_id}/media/")
+def store_media(
     note_id: int,
-    pic_content: str,
-    pic_name: str,
-    pic_alt_text: str,
+    file: UploadFile,
     db: DatabaseConnection = Depends(get_db),
 ):
     """stores a picture on the hamster.\n
     returns the path to the picture."""
-    # TODO: get rid of multiple implementation of note_path- & pic_path-generation
-    pic_path = f"note_{note_id}/pics/{pic_name}"
-    url = f"{URL_HAMSTER}/{pic_path}"
-    r = requests.put(url, data=pic_content, timeout=10)
-    assert r.status_code == 200
 
-    pic_id = db.store_meta_of_picture(note_id, pic_name, pic_alt_text, pic_path)
+    # create a new db entry to get an id
+    media_id = db.store_meta_of_media(note_id, file.filename)
 
-    return {"status": "created", "id": pic_id, "path": pic_path}
+    # safe the picture on the hamster
+    media_path = f"note_{note_id}/media/{media_id}"
+    url = f"{URL_HAMSTER}/{media_path}"
+    files = {"file": (file.filename, file.file, file.content_type)}
+    r = requests.put(url, files=files, timeout=10)
+    assert r.status_code == 200, (
+        f"status_code: {r.status_code},\n answer: {r.text}, \n url: {url}"
+    )
+
+    # update metadata
+    # insert the path of the picture in the db
+    affected_rows = db.update_meta_of_media(media_id, file.filename, media_path)
+    assert affected_rows == 1
+
+    return {"status": "created", "id": media_id, "path": media_path}
 
 
-@app.put("/notes/{note_id}/pics/{pic_id}")
-def update_picture(
+@app.put("/notes/{note_id}/media/{media_id}")
+def update_media(
     note_id: int,
-    pic_id: int,
-    pic_content: str,
-    pic_name: str,
-    pic_alt_text: str,
+    media_id: int,
+    file: UploadFile,
     db: DatabaseConnection = Depends(get_db),
 ):
     """updates a picture on the hamster.\n
     takes the new picture content as input and updates the picture on the
     hamster."""
-    # TODO: get rid of multiple implementation of note_path- & pic_path-generation
-    pic_path = f"note_{note_id}/pics/{pic_name}"
-    url = f"{URL_HAMSTER}/{pic_path}"
-    r = requests.put(url, data=pic_content, timeout=10)
+    media_path = f"note_{note_id}/media/{media_id}"
+    url = f"{URL_HAMSTER}/{media_path}"
+    files = {"file": (file.filename, file.file, file.content_type)}
+    r = requests.put(url, files=files, timeout=10)
     assert r.status_code == 200
 
-    affected_rows = db.update_meta_of_picture(
-        pic_id, pic_name, pic_alt_text, pic_path
-    )
+    affected_rows = db.update_meta_of_media(media_id, file.filename, media_path)
     assert affected_rows == 1
 
-    return {"status": "updated", "path": pic_path}
+    return {"status": "updated", "path": media_path}
 
 
-@app.delete("/notes/{note_id}/pics/{pic_id}")
-def delete_pic(
-    pic_id: int, pic_path: str, db: DatabaseConnection = Depends(get_db)
-):
+@app.delete("/notes/{note_id}/media/{media_id}")
+def delete_pic(media_id: int, db: DatabaseConnection = Depends(get_db)):
     """deletes a picture and its metadata."""
-    affected_rows = db.remove_meta_of_picture(pic_id)
+    # Get the path of the picture
+    media_data = db.read_meta_of_media(media_id)
+    media_path = media_data[2]
+
+    affected_rows = db.remove_meta_of_media(media_id)
     assert affected_rows == 1
 
-    url = f"{URL_HAMSTER}/{pic_path}"
+    url = f"{URL_HAMSTER}/{media_path}"
     r = requests.delete(url, timeout=10)
     assert r.status_code == 200
 
@@ -195,8 +196,6 @@ def delete_pic(
 
 def convert_md_to_html(md: str) -> str:
     """converts markdown to html"""
-    # TODO test this
     r = requests.post(f"{URL_CHAMAELEON}/", data=md, timeout=10)
     assert r.status_code == 200
     return r.text
-    # return md
