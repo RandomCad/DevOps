@@ -1,10 +1,11 @@
 mkdir -p files
 rm -f files/__test.txt
+rm -rf files/__long
 
 kind=$1
 
 if [[ $kind = "docker" ]]; then
-    docker run -d -p 8000:8000 --name hamster_test hamster:test
+    docker run -d --rm -p 8000:8000 --name hamster_test -v ./files:/app/files hamster:test
 else
     target/debug/hamster &
     pid=$!
@@ -15,7 +16,8 @@ sleep 1
 assert() {
     if [[ $1 != $2 ]]; then
         echo "assertion failed: $1 != $2"
-        finish 1
+        finish
+        exit 1
     fi
 }
 
@@ -25,7 +27,6 @@ finish() {
     else
         kill $pid
     fi
-    exit $1
 }
 
 curl_status() {
@@ -45,5 +46,14 @@ assert "hamster2" $(curl -s localhost:8000/__test.txt)
 assert 200 $(curl_status DELETE)
 assert 500 $(curl_status DELETE)
 assert 404 $(curl_status GET)
+assert 200 $(curl -s -o /dev/null -X PUT localhost:8000/__long/path/to/file.txt -w "%{http_code}" -H "Content-Type: text/plain" -d "test3")
+assert 200 $(curl -s -o /dev/null -X PUT localhost:8000/__long/path/to/file2.txt -w "%{http_code}" -H "Content-Type: text/plain" -d "test4")
 
-finish 0
+finish
+
+if [[ $(sudo cat files/__long/path/to/file.txt) != "test3" ]]; then
+    echo "file vanished"
+    exit 1
+fi
+
+exit 0
