@@ -1,5 +1,25 @@
 components:
   schemas:
+    Body_store_media_notes__note_id__media__post:
+      properties:
+        file:
+          format: binary
+          title: File
+          type: string
+      required:
+      - file
+      title: Body_store_media_notes__note_id__media__post
+      type: object
+    Body_update_media_notes__note_id__media__media_id__put:
+      properties:
+        file:
+          format: binary
+          title: File
+          type: string
+      required:
+      - file
+      title: Body_update_media_notes__note_id__media__media_id__put
+      type: object
     HTTPValidationError:
       properties:
         detail:
@@ -37,7 +57,8 @@ openapi: 3.1.0
 paths:
   /notes:
     get:
-      description: returns a list of all notes
+      description: returns a list of all notes, containing the id and title of each
+        note
       operationId: read_all_notes_notes_get
       responses:
         '200':
@@ -176,13 +197,13 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
       summary: Update Note
-  /notes/{note_id}/pics/:
+  /notes/{note_id}/media/:
     post:
       description: 'stores a picture on the hamster.
 
 
         returns the path to the picture.'
-      operationId: store_picture_notes__note_id__pics__post
+      operationId: store_media_notes__note_id__media__post
       parameters:
       - in: path
         name: note_id
@@ -190,24 +211,12 @@ paths:
         schema:
           title: Note Id
           type: integer
-      - in: query
-        name: pic_content
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_store_media_notes__note_id__media__post'
         required: true
-        schema:
-          title: Pic Content
-          type: string
-      - in: query
-        name: pic_name
-        required: true
-        schema:
-          title: Pic Name
-          type: string
-      - in: query
-        name: pic_alt_text
-        required: true
-        schema:
-          title: Pic Alt Text
-          type: string
       responses:
         '200':
           content:
@@ -220,24 +229,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
-      summary: Store Picture
-  /notes/{note_id}/pics/{pic_id}:
+      summary: Store Media
+  /notes/{note_id}/media/{media_id}:
     delete:
       description: deletes a picture and its metadata.
-      operationId: delete_pic_notes__note_id__pics__pic_id__delete
+      operationId: delete_pic_notes__note_id__media__media_id__delete
       parameters:
       - in: path
-        name: pic_id
+        name: note_id
         required: true
         schema:
-          title: Pic Id
+          title: Note Id
           type: integer
-      - in: query
-        name: pic_path
+      - in: path
+        name: media_id
         required: true
         schema:
-          title: Pic Path
-          type: string
+          title: Media Id
+          type: integer
       responses:
         '200':
           content:
@@ -258,7 +267,7 @@ paths:
         takes the new picture content as input and updates the picture on the
 
         hamster.'
-      operationId: update_picture_notes__note_id__pics__pic_id__put
+      operationId: update_media_notes__note_id__media__media_id__put
       parameters:
       - in: path
         name: note_id
@@ -267,29 +276,17 @@ paths:
           title: Note Id
           type: integer
       - in: path
-        name: pic_id
+        name: media_id
         required: true
         schema:
-          title: Pic Id
+          title: Media Id
           type: integer
-      - in: query
-        name: pic_content
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Body_update_media_notes__note_id__media__media_id__put'
         required: true
-        schema:
-          title: Pic Content
-          type: string
-      - in: query
-        name: pic_name
-        required: true
-        schema:
-          title: Pic Name
-          type: string
-      - in: query
-        name: pic_alt_text
-        required: true
-        schema:
-          title: Pic Alt Text
-          type: string
       responses:
         '200':
           content:
@@ -302,4 +299,4 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
-      summary: Update Picture
+      summary: Update Media

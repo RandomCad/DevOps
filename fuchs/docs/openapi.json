@@ -8,7 +8,7 @@
     "/notes": {
       "get": {
         "summary": "Read All Notes",
-        "description": "returns a list of all notes",
+        "description": "returns a list of all notes, containing the id and title of each note",
         "operationId": "read_all_notes_notes_get",
         "responses": {
           "200": {
@@ -197,11 +197,11 @@
         }
       }
     },
-    "/notes/{note_id}/pics/": {
+    "/notes/{note_id}/media/": {
       "post": {
-        "summary": "Store Picture",
+        "summary": "Store Media",
         "description": "stores a picture on the hamster.\n\nreturns the path to the picture.",
-        "operationId": "store_picture_notes__note_id__pics__post",
+        "operationId": "store_media_notes__note_id__media__post",
         "parameters": [
           {
             "name": "note_id",
@@ -211,35 +211,18 @@
               "type": "integer",
               "title": "Note Id"
             }
-          },
-          {
-            "name": "pic_content",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Pic Content"
-            }
-          },
-          {
-            "name": "pic_name",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Pic Name"
-            }
-          },
-          {
-            "name": "pic_alt_text",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Pic Alt Text"
-            }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_store_media_notes__note_id__media__post"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -262,11 +245,11 @@
         }
       }
     },
-    "/notes/{note_id}/pics/{pic_id}": {
+    "/notes/{note_id}/media/{media_id}": {
       "put": {
-        "summary": "Update Picture",
+        "summary": "Update Media",
         "description": "updates a picture on the hamster.\n\ntakes the new picture content as input and updates the picture on the\nhamster.",
-        "operationId": "update_picture_notes__note_id__pics__pic_id__put",
+        "operationId": "update_media_notes__note_id__media__media_id__put",
         "parameters": [
           {
             "name": "note_id",
@@ -278,42 +261,25 @@
             }
           },
           {
-            "name": "pic_id",
+            "name": "media_id",
             "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
-              "title": "Pic Id"
-            }
-          },
-          {
-            "name": "pic_content",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Pic Content"
-            }
-          },
-          {
-            "name": "pic_name",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Pic Name"
-            }
-          },
-          {
-            "name": "pic_alt_text",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Pic Alt Text"
+              "title": "Media Id"
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_update_media_notes__note_id__media__media_id__put"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -338,24 +304,24 @@
       "delete": {
         "summary": "Delete Pic",
         "description": "deletes a picture and its metadata.",
-        "operationId": "delete_pic_notes__note_id__pics__pic_id__delete",
+        "operationId": "delete_pic_notes__note_id__media__media_id__delete",
         "parameters": [
           {
-            "name": "pic_id",
+            "name": "note_id",
             "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
-              "title": "Pic Id"
+              "title": "Note Id"
             }
           },
           {
-            "name": "pic_path",
-            "in": "query",
+            "name": "media_id",
+            "in": "path",
             "required": true,
             "schema": {
-              "type": "string",
-              "title": "Pic Path"
+              "type": "integer",
+              "title": "Media Id"
             }
           }
         ],
@@ -384,6 +350,34 @@
   },
   "components": {
     "schemas": {
+      "Body_store_media_notes__note_id__media__post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_store_media_notes__note_id__media__post"
+      },
+      "Body_update_media_notes__note_id__media__media_id__put": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_update_media_notes__note_id__media__media_id__put"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
