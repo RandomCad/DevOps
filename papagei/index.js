@@ -73,12 +73,13 @@ function create_new_note() {
     console.log("Create new note");
 
     check_if_note_needs_to_be_saved();
-    open_note(0, 'Neue Notiz', 'Hier ist Platz für Ihre Ideen und Gedanken', 'Lollo');
+    let now = new Date();
+    open_note(0, 'Neue Notiz', now.toISOString(), 'Hier ist Platz für Ihre Ideen und Gedanken', 'Lollo');
 }
 
 function open_note(note_id, title, date, content, author) {
     show_note_title(title);
-    show_note_author(date)
+    show_note_date(date)
     show_note_author(author);
     show_note_content(content);
     set_note_main_id(note_id);
@@ -88,9 +89,16 @@ function show_note_title(title) {
     var note_title = document.getElementsByClassName("note_main_title")[0];
     note_title.innerHTML = title;
 }
-function show_note_date(date) {
+function show_note_date(date_str) {
+    /**
+     * @param {string} date_str - ISO 8601-format "2025-03-07T20:50:07.232Z"
+     */
     var note_date = document.getElementsByClassName("note_main_date")[0];
-    note_date.innerHTML = date;
+    const date = new Date(date_str);
+    const formattedDateTime = date.toLocaleString('de-DE');
+    
+    note_date.textContent = formattedDateTime;
+    note_date.setAttribute("datetime", date_str);
 }
 function show_note_author(author) {
     var note_author = document.getElementsByClassName("note_main_author")[0];
@@ -239,6 +247,10 @@ function show_error_and_reload(message = "Ein Fehler ist aufgetreten! Seite neu 
     if (confirm(message)) {
         location.reload();
     }
+}
+
+function get_time_and_day() {
+    
 }
 
 
