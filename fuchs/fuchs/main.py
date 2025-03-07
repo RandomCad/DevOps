@@ -5,28 +5,13 @@ import requests
 from fastapi import FastAPI, Depends, UploadFile
 
 from . import (
-    DB_NAME,
-    DB_USER,
-    DB_PASSWORD,
-    DB_HOST,
     URL_HAMSTER,
     URL_CHAMAELEON,
 )
-from .database import DatabaseConnection
+from .database import DatabaseConnection, get_db
 
 
 app = FastAPI()
-
-
-def get_db():
-    """returns a database connection"""
-    db = DatabaseConnection(
-        dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD, host=DB_HOST
-    )
-    try:
-        yield db
-    finally:
-        db.conn.close()
 
 
 @app.get("/notes")

@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from fuchs.database import DatabaseConnection
+from fuchs import DB_NAME, DB_USER, DB_PASSWORD, DB_HOST
+from fuchs.database import DatabaseConnection, get_db
 
 
 class TestDatabaseConnection(unittest.TestCase):
@@ -8,7 +9,7 @@ class TestDatabaseConnection(unittest.TestCase):
     def setUp(self, mock_connect):
         self.mock_conn = MagicMock()
         mock_connect.return_value = self.mock_conn
-        self.db = DatabaseConnection("dbname", "user", "password", "host")
+        self.db = next(get_db())
 
     def test_read_note_success(self):
         mock_cursor = self.mock_conn.cursor.return_value.__enter__.return_value
@@ -134,6 +135,25 @@ class TestDatabaseConnection(unittest.TestCase):
             "UPDATE media SET media_name = %s, media_path = %s WHERE media_id = %s",
             ("Updated Media Name", "Updated Media Path", 1),
         )
+
+    @patch("fuchs.database.psycopg2.connect")
+    def test_get_db(self, mock_connect):
+        mock_conn = MagicMock()
+        mock_connect.return_value = mock_conn
+
+        db_gen = get_db()
+        db = next(db_gen)
+
+        self.assertIsInstance(db, DatabaseConnection)
+        mock_connect.assert_called_once_with(
+            dbname=DB_NAME,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            host=DB_HOST,
+        )
+
+        db_gen.close()
+        mock_conn.close.assert_called_once()
 
 
 if __name__ == "__main__":
