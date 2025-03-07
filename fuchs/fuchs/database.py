@@ -22,7 +22,7 @@ class DatabaseConnection:
 
     def read_note(self, note_id: int):
         """reads a note from the database by id,
-        returns a tuple with the title and content of the note"""
+        returns a tuple with the title, content and path of the note"""
         with self.conn:
             with self.conn.cursor() as cur:
                 cur.execute(
