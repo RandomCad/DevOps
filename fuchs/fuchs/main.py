@@ -13,7 +13,6 @@ from .database import DatabaseConnection, get_db
 NOTE_PATH = "note_{note_id}/web.html"
 MEDIA_PATH = "note_{note_id}/media/{media_id}"
 
-
 app = FastAPI()
 
 
@@ -102,13 +101,13 @@ def update_note(
     takes the new markdown content of the note as input, converts it to html,
     updates the old markdown (on db) and html (on hamster).\n"""
     try:
-        # convert to html
-        note_content_html = convert_md_to_html(note_content_md)
-
         # get the path of the note
         note_data = db.read_note(note_id)
         assert note_data is not None, f"Note with id {note_id} not found"
         note_path = note_data[2]
+
+        # convert to html
+        note_content_html = convert_md_to_html(note_content_md)
 
         # update the html on the hamster
         put_file_on_hamster(note_path, note_content_html)

@@ -1,4 +1,4 @@
-# TODOs for the fuchs
+# TODOs for fuchs
 
 ## Core-programm
 
@@ -11,10 +11,17 @@
   * [X] embedd api execution in try-except blocks to supply proper error messages
   * [ ] move db-assertions to database.py
   * [ ] log real cause on server
-* [ ] implement a transaction like concept, so that e.g. if saving the markdown-content of a note fails but the converted html is already stored on the hamster no inconsistencies arise (because it get's rolled back)
+* [ ] implement a transaction like concept, so that e.g. if saving the
+markdown-content of a note fails, but the converted html is already stored on
+the hamster, no inconsistencies arise (because it get's rolled back)
 
 ## Tests
 
-* [ ] move integration test (now in test_main.py) to new file and create "real"
+* [X] move integration test (now in test_main.py) to new file and create "real"
 unittest for main (using mocked stuff)  
 * [ ] also test on failures
+  * [X] in test_main
+  * [ ] in test_database
+  * [ ] in test_api_of_app
+  * [ ] in test_helpers
+* [ ] implement tests for helpers.py
