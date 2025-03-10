@@ -40,4 +40,5 @@ jobs:
       run: |
         docker compose -f fuchs/docker-compose.yml --project-directory . up -d --build
         sleep 1
-        python -m unittest ./fuchs/tests/test_database.py ./fuchs/tests/test_main.py
+        cd fuchs
+        python -m unittest ./tests/test_database.py ./tests/test_main.py
