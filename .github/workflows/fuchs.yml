@@ -31,9 +31,9 @@ jobs:
       run: 
         pip install --no-cache-dir --upgrade -r requirements.txt
     - name: Run UnitTests
-      working-directory: ./fuchs/tests
+      working-directory: ./fuchs/
       run: 
-        python -m unittest test_main.py test_helpers.py test_database.py
+        python -m unittest ./tests/test_main.py ./tests/test_helpers.py ./tests/test_database.py
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
     - name: Login to Docker Hub
