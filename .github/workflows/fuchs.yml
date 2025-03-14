@@ -30,6 +30,10 @@ jobs:
       working-directory: ./fuchs
       run: 
         pip install --no-cache-dir --upgrade -r requirements.txt
+    - name: Run UnitTests
+      working-directory: ./fuchs/test
+      run: 
+        python -m unittest test_main.py test_helpers.py test_database.py
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
     - name: Login to Docker Hub
@@ -37,7 +41,7 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Run UnitTests
+    - name: Run IntegrationTests
       run: |
         export DB_NAME=fuchs_db
         export DB_PASSWORD=postgres
@@ -48,4 +52,4 @@ jobs:
         docker compose -f fuchs/docker-compose.yml --project-directory . up -d --build
         sleep 1
         cd fuchs
-        python -m unittest ./tests/test_database.py ./tests/test_main.py
+        python -m unittest ./tests/test_api_of_app.py
