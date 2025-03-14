@@ -1,0 +1,85 @@
+# compose file for testing fuchs
+#
+# This compose stack is used to start all necessary services to test fuchs,
+# which includes hamster, chamaeleon and fuchs-db. They are either pulled
+# from DockerHub (local testing) ore built from Dockerfile (ci).
+# Additionally, by using `--profile full_test`, fuchs can also be started
+# as a container.
+#
+# usage:
+# - local testing:
+#   docker compose -f fuchs/docker-compose.yml --project-directory . up -d --pull always
+# - testing in ci:
+#   docker compose -f fuchs/docker-compose.yml --project-directory . up -d --build
+# - testing image in ci:
+#   docker compose -f fuchs/docker-compose.yml --project-directory . --profile full_test up -d --build
+#
+# - stopping:
+#   docker compose -f fuchs/docker-compose.yml --project-directory . --profile "*" down
+#
+# this compose stack starts:
+# - fuchs_db:
+#   always started
+# - hamster:
+#   either started from DockerHub (local testing) or built from Dockerfile (ci)
+# - chamaeleon:
+#   either started from DockerHub (local testing) or built from Dockerfile (ci)
+# - fuchs:
+#   built from Dockerfile if `--profile full_test` is set
+#
+# local testing environment variables:
+#   DB_NAME=fuchs_db
+#   DB_PASSWORD=postgres
+#   DB_USER=postgres
+#   DB_HOST=localhost
+#   URL_HAMSTER=http://localhost:8001
+#   URL_CHAMAELEON=http://localhost:8002
+
+
+services:
+  hamster:
+    image: balindner/hamster
+    build:
+      dockerfile: ./hamster/Dockerfile
+      cache_from:
+      - type=gha,scope=hamster
+      - type=registry,ref=balindner/hamster:buildcache-amd64
+    ports:
+    - "127.0.0.1:8001:8000"
+  chamaeleon:
+    image: balindner/chamaeleon
+    build:
+      dockerfile: ./chamaeleon/Dockerfile
+      cache_from:
+      - type=gha,scope=chamaeleon
+      - type=registry,ref=balindner/chamaeleon:buildcache-amd64
+    ports:
+    - "127.0.0.1:8002:8000"
+  fuchs:
+    build:
+      dockerfile: ./fuchs/Dockerfile
+      cache_from:
+      - type=gha,scope=fuchs
+    profiles:
+    - full_test
+    ports:
+    - "127.0.0.1:8000:8000"
+    environment:
+      DB_NAME: fuchs_db
+      DB_PASSWORD: postgres
+      DB_USER: postgres
+      DB_HOST: fuchs-db
+      URL_HAMSTER: http://hamster:8000
+      URL_CHAMAELEON: http://chamaeleon:8000
+  fuchs-db:
+    image: postgres:alpine
+    ports:
+    - "127.0.0.1:5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: fuchs_db
+    volumes:
+    - type: bind
+      source: ./fuchs/init.sql
+      target: /docker-entrypoint-initdb.d/init.sql
