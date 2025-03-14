@@ -26,18 +26,26 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: "3.10"
+    - name: Setup phyton dependencys
+      working-directory: ./fuchs
+      run: 
+        pip install --no-cache-dir --upgrade -r requirements.txt
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
-    - name: Build and push
-      uses: docker/build-push-action@v6
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
       with:
-        file: "./hamster/Dockerfile"
-        push: false
-        load: true
-        tags: hamster:test
-        cache-from: type=gha,scope=hamster
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Run UnitTests
       run: |
+        export DB_NAME=fuchs_db
+        export DB_PASSWORD=postgres
+        export DB_USER=postgres
+        export DB_HOST=localhost
+        export URL_HAMSTER=http://localhost:8001
+        export URL_CHAMAELEON=http://localhost:8002
         docker compose -f fuchs/docker-compose.yml --project-directory . up -d --build
         sleep 1
-        python -m unittest ./fuchs/tests/test_database.py ./fuchs/tests/test_main.py
+        cd fuchs
+        python -m unittest ./tests/test_database.py ./tests/test_main.py

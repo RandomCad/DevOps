@@ -43,6 +43,7 @@ services:
       dockerfile: ./hamster/Dockerfile
       cache_from:
       - type=gha,scope=hamster
+      - type=registry,ref=balindner/hamster:buildcache-amd64
     ports:
     - "127.0.0.1:8001:8000"
   chamaeleon:
@@ -51,6 +52,7 @@ services:
       dockerfile: ./chamaeleon/Dockerfile
       cache_from:
       - type=gha,scope=chamaeleon
+      - type=registry,ref=balindner/chamaeleon:buildcache-amd64
     ports:
     - "127.0.0.1:8002:8000"
   fuchs:
