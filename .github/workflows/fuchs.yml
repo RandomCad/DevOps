@@ -31,7 +31,7 @@ jobs:
       run: 
         pip install --no-cache-dir --upgrade -r requirements.txt
     - name: Run UnitTests
-      working-directory: ./fuchs/test
+      working-directory: ./fuchs/tests
       run: 
         python -m unittest test_main.py test_helpers.py test_database.py
     - name: Set up Docker Buildx
