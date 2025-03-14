@@ -8,7 +8,7 @@ from fastapi.testclient import TestClient
 from fuchs.main import app
 
 
-class TestMain(unittest.TestCase):
+class TestApp(unittest.TestCase):
     """
     This class contains unit tests for the FastAPI application.
     """
@@ -53,6 +53,19 @@ class TestMain(unittest.TestCase):
 
         self.test_note_id = response.json()["id"]
 
+    def _test_create_note_failure(self):
+        """
+        Test the /notes/ endpoint to ensure it handles failure when creating a new note.
+        """
+        response = self.client.post(
+            "/notes/",
+            params={
+                "note_title": "",
+                "note_content_md": "",
+            },
+        )
+        self.assertEqual(response.status_code, 422, response.text)
+
     def _test_read_note(self):
         """
         Test the /notes/{note_id} endpoint to ensure it returns the content and metadata of a note.
@@ -62,6 +75,16 @@ class TestMain(unittest.TestCase):
         self.assertIn("id", response.json())
         self.assertIn("content", response.json())
         self.assertIn("pictures", response.json())
+
+    def _test_read_note_not_found(self):
+        """
+        Test the /notes/{note_id} endpoint to ensure it handles note not found.
+        """
+        response = self.client.get("/notes/999")
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(
+            response.json(), {"status": "error", "message": "Note not found"}
+        )
 
     def _test_update_note(self):
         """
@@ -78,6 +101,20 @@ class TestMain(unittest.TestCase):
         self.assertEqual(response.status_code, 200, response.text)
         self.assertEqual(response.json()["status"], "updated")
         self.assertEqual(response.json()["id"], self.test_note_id)
+
+    def _test_update_note_failure(self):
+        """
+        Test the /notes/{note_id} endpoint to ensure it handles failure when updating a note.
+        """
+        url = f"/notes/{self.test_note_id}"
+        response = self.client.put(
+            url=url,
+            params={
+                "note_title": "",
+                "note_content_md": "",
+            },
+        )
+        self.assertEqual(response.status_code, 422, response.text)
 
     def _test_read_all_notes(self):
         """
@@ -103,6 +140,17 @@ class TestMain(unittest.TestCase):
 
         self.test_note_pic_id = response.json()["id"]
 
+    def _test_store_media_failure(self):
+        """
+        Test the /notes/{note_id}/media/ endpoint to ensure it handles failure when storing a media file.
+        """
+        with open("tests/test_pic.png", "rb") as file:
+            response = self.client.post(
+                f"/notes/{self.test_note_id}/media/",
+                files={"file": ("", file, "image/png")},
+            )
+        self.assertEqual(response.status_code, 422, response.text)
+
     def _test_update_media(self):
         """
         Test the /notes/{note_id}/media/{media_id} endpoint to ensure it updates a media file.
@@ -116,6 +164,24 @@ class TestMain(unittest.TestCase):
         self.assertEqual(response.json()["status"], "updated")
         self.assertIn("path", response.json())
 
+    def _test_update_media_failure(self):
+        """
+        Test the /notes/{note_id}/media/{media_id} endpoint to ensure it handles failure when updating a media file.
+        """
+        with open("tests/updated_test_pic.png", "rb") as file:
+            response = self.client.put(
+                f"/notes/{self.test_note_id}/media/999",
+                files={"file": file},
+            )
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(
+            response.json(),
+            {
+                "status": "error",
+                "message": f"Media with id 999 and note {self.test_note_id} not found",
+            },
+        )
+
     def _test_delete_media(self):
         """
         Test the /notes/{note_id}/media/{media_id} endpoint to ensure it deletes a media file.
@@ -126,6 +192,20 @@ class TestMain(unittest.TestCase):
         self.assertEqual(response.status_code, 200, response.text)
         self.assertEqual(response.json()["status"], "deleted")
 
+    def _test_delete_media_not_found(self):
+        """
+        Test the /notes/{note_id}/media/{media_id} endpoint to ensure it handles media not found.
+        """
+        response = self.client.delete(f"/notes/{self.test_note_id}/media/999")
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(
+            response.json(),
+            {
+                "status": "error",
+                "message": f"Media with id 999 and note {self.test_note_id} not found",
+            },
+        )
+
     def _test_delete_note(self):
         """
         Test the /notes/{note_id} endpoint to ensure it deletes an existing note.
@@ -133,6 +213,16 @@ class TestMain(unittest.TestCase):
         response = self.client.delete(f"/notes/{self.test_note_id}")
         self.assertEqual(response.status_code, 200, response.text)
         self.assertEqual(response.json()["status"], "deleted")
+
+    def _test_delete_note_not_found(self):
+        """
+        Test the /notes/{note_id} endpoint to ensure it handles note not found.
+        """
+        response = self.client.delete("/notes/999")
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(
+            response.json(), {"status": "error", "message": "Note not found"}
+        )
 
 
 if __name__ == "__main__":
