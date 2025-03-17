@@ -4,6 +4,7 @@
 name: fuchs
 
 on:
+  workflow_call:  # allow this workflow to be called from other workflows
   pull_request:
     branches: [ "main" ]
 
