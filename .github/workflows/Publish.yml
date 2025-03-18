@@ -10,6 +10,8 @@ jobs:
     uses: ./.github/workflows/chamaeleon.yml  # use the callable tests job to run tests
   test_hamster:
     uses: ./.github/workflows/hamster.yml  # use the callable tests job to run tests
+  test_papagei: #don't know for what this is needed ad the moment
+    uses: ./.github/workflows/papagei.yml  # use the callable tests job to run tests
 
   build_images:
     strategy:
