@@ -1,0 +1,25 @@
+# TODOs for fuchs
+
+## Core-programm
+
+### main.py
+
+* [X] get rid of multiple implementation of note_path- & media_path-generation
+* [ ] evalute async functions and implement them
+* [ ] implement more detailed openapi-conf
+* [ ] improve error handling
+  * [X] embedd api execution in try-except blocks to supply proper error messages
+  * [X] move db-assertions to database.py
+  * [ ] log real cause on server
+* [ ] implement a transaction like concept, so that e.g. if saving the
+markdown-content of a note fails, but the converted html is already stored on
+the hamster, no inconsistencies arise (because it get's rolled back)
+
+## Tests
+
+* [X] also test on failures
+  * [X] in test_main
+  * [X] in test_database
+  * [X] in test_api_of_app
+  * [X] in test_helpers
+* [X] implement tests for helpers.py
