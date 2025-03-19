@@ -15,18 +15,19 @@ MEDIA_PATH = "note_{note_id}/media/{media_id}"
 
 app = FastAPI()
 
+def raise_errors(result):
+    if result["status"] == "error":
+        (code, kind) = (500, "Server error occured") if result.get("type") == "server" else (400, "Invalid request")
+        raise HTTPException(
+            status_code=code,
+            detail=f"{kind}: {result["message"]}"
+        )
 
 @app.get("/notes")
 def read_all_notes(db: DatabaseConnection = Depends(get_db)):
     """returns a list of all notes, containing the id and title of each note"""
     result = db.read_all_notes()
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid request. Please check your parameters.",
-        )
+    raise_errors(result)
     return {
         "notes": [{"id": note[0], "title": note[1]} for note in result["data"]]
     }
@@ -37,12 +38,7 @@ def read_note(note_id: int, db: DatabaseConnection = Depends(get_db)):
     """returns the markdown content of a note plus the metadata of pictures
     of the note"""
     result = db.read_note(note_id)
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400, detail="Note not found. Please check the note ID."
-        )
+    raise_errors(result)
     (note_title, note_content_md, note_path) = result["data"]
     media_data = db.read_all_meta_of_media(note_id)
     if media_data["status"] == "error":
@@ -68,43 +64,19 @@ def create_note(
     stores the markdown in the db and distributes the html over the hamster.\n
     returns the path to the note for the hamster"""
     result = db.write_note(note_title, note_content_md)
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid input. Please provide valid note details.",
-        )
+    raise_errors(result)
     note_id = result["data"]
 
     result = convert_md_to_html(note_content_md)
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid input. Please provide valid note details.",
-        )
+    raise_errors(result)
     note_content_html = result["html"]
 
     note_path = NOTE_PATH.format(note_id=note_id)
     result = put_file_on_hamster(note_path, note_content_html)
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid input. Please provide valid note details.",
-        )
+    raise_errors(result)
 
     result = db.update_note(note_id, note_title, note_content_md, note_path)
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid input. Please provide valid note details.",
-        )
+    raise_errors(result)
 
     return {"status": "created", "id": note_id, "path": note_path}
 
@@ -120,42 +92,18 @@ def update_note(
     takes the new markdown content of the note as input, converts it to html,
     updates the old markdown (on db) and html (on hamster).\n"""
     result = db.read_note(note_id)
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid input. Please provide valid note details.",
-        )
+    raise_errors(result)
     note_path = result["data"][2]
 
     result = convert_md_to_html(note_content_md)
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid input. Please provide valid note details.",
-        )
+    raise_errors(result)
     note_content_html = result["html"]
 
     result = put_file_on_hamster(note_path, note_content_html)
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid input. Please provide valid note details.",
-        )
+    raise_errors(result)
 
     result = db.update_note(note_id, note_title, note_content_md, note_path)
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid input. Please provide valid note details.",
-        )
+    raise_errors(result)
 
     return {"status": "updated", "id": note_id}
 
@@ -165,29 +113,14 @@ def delete_note(note_id: int, db: DatabaseConnection = Depends(get_db)):
     """deletes a note.\n
     removes both the markdown (db) and the html content (hamster)."""
     result = db.read_note(note_id)
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400, detail="Note not found. Please check the note ID."
-        )
+    raise_errors(result)
     note_path = result["data"][2]
 
     result = delete_file_on_hamster(note_path)
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400, detail="Note not found. Please check the note ID."
-        )
+    raise_errors(result)
 
     result = db.remove_note(note_id)
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400, detail="Note not found. Please check the note ID."
-        )
+    raise_errors(result)
 
     return {"status": "deleted"}
 
@@ -201,33 +134,15 @@ def store_media(
     """stores a picture on the hamster.\n
     returns the path to the picture."""
     result = db.store_meta_of_media(note_id, file.filename)
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid input. Please provide a valid media file.",
-        )
+    raise_errors(result)
     media_id = result["data"]
 
     media_path = MEDIA_PATH.format(note_id=note_id, media_id=media_id)
     result = put_file_on_hamster(media_path, file.file)
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid input. Please provide a valid media file.",
-        )
+    raise_errors(result)
 
     result = db.update_meta_of_media(media_id, file.filename, media_path)
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid input. Please provide a valid media file.",
-        )
+    raise_errors(result)
 
     return {"status": "created", "id": media_id, "path": media_path}
 
@@ -243,32 +158,14 @@ def update_media(
     takes the new picture content as input and updates the picture on the
     hamster."""
     result = db.read_meta_of_media(media_id)
-    if result["status"] == "error" or result["data"][0] != note_id:
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid input. Please provide a valid media file.",
-        )
+    raise_errors(result)
     media_path = result["data"][2]
 
     result = put_file_on_hamster(media_path, file.file)
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid input. Please provide a valid media file.",
-        )
+    raise_errors(result)
 
     result = db.update_meta_of_media(media_id, file.filename, media_path)
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400,
-            detail="Invalid input. Please provide a valid media file.",
-        )
+    raise_errors(result)
 
     return {"status": "updated", "path": media_path}
 
@@ -279,31 +176,13 @@ def delete_media(
 ):
     """deletes a media file and its metadata."""
     result = db.read_meta_of_media(media_id)
-    if result["status"] == "error" or result["data"][0] != note_id:
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400,
-            detail="Media not found. Please check the media ID.",
-        )
+    raise_errors(result)
     media_path = result["data"][2]
 
     result = delete_file_on_hamster(media_path)
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400,
-            detail="Media not found. Please check the media ID.",
-        )
+    raise_errors(result)
 
     result = db.remove_meta_of_media(media_id)
-    if result["status"] == "error":
-        if result.get("type") == "server":
-            raise HTTPException(status_code=500, detail="Server error occurred")
-        raise HTTPException(
-            status_code=400,
-            detail="Media not found. Please check the media ID.",
-        )
+    raise_errors(result)
 
     return {"status": "deleted"}
