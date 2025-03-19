@@ -2,8 +2,8 @@ name: hamster
 
 on:
   workflow_call:  # allow this workflow to be called from other workflows
-  pull_request:
-    branches: [ "main" ]
+  # pull_request:
+  #   branches: [ "main" ]
     
 env:
   CARGO_TERM_COLOR: always
@@ -14,9 +14,6 @@ jobs:
     outputs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
     steps:
-    # wait for 2s so that fuchs.yml has already started this and concurrent_skipping skips this 
-    - name: Wait 2 seconds 
-      run: sleep 2
     - id: skip_check
       uses: fkirc/skip-duplicate-actions@v5
       with:
