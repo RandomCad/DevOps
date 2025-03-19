@@ -18,10 +18,7 @@ jobs:
       uses: fkirc/skip-duplicate-actions@v5
       with:
         concurrent_skipping: "same_content_newer"
-        paths:
-        - "chamaeleon/**"
-        - "Cargo.toml"
-        - "Cargo.lock"
+        paths: '["chamaeleon/**", "Cargo.toml", "Cargo.lock"]'
 
   build_chamaeleon:
     runs-on: ubuntu-latest
