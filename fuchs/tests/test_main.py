@@ -39,13 +39,13 @@ class TestMain(unittest.TestCase):
         self.mock_db.read_all_notes.return_value = {
             "status": "error",
             "type": "user",
-            "message": "Invalid request. Please check your parameters.",
+            "message": "Invalid request",
         }
         response = self.client.get("/notes")
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {"detail": "Invalid request. Please check your parameters."},
+            {"detail": "Invalid request: Invalid request"},
         )
 
     def test_read_note_success(self):
@@ -74,14 +74,19 @@ class TestMain(unittest.TestCase):
         self.mock_db.read_note.return_value = {
             "status": "error",
             "type": "user",
-            "message": "Note not found. Please check the note ID.",
+            "message": "Note not found",
         }
-        response = self.client.get("/notes/999")
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(),
-            {"detail": "Note not found. Please check the note ID."},
-        )
+        with self.assertLogs("uvicorn.error", level="ERROR") as log:
+            response = self.client.get("/notes/999")
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(
+                response.json(),
+                {"detail": "Invalid request: Note not found"},
+            )
+            self.assertIn(
+                "ERROR:uvicorn.error:{'status': 'error', 'type': 'user', 'message': 'Note not found'}",
+                log.output,
+            )
 
     def test_create_note_success(self):
         self.mock_db.write_note.return_value = {"status": "success", "data": 1}
@@ -111,20 +116,25 @@ class TestMain(unittest.TestCase):
         self.mock_db.write_note.return_value = {
             "status": "error",
             "type": "user",
-            "message": "Invalid input. Please provide valid note details.",
+            "message": "Invalid input",
         }
-        response = self.client.post(
-            "/notes/",
-            params={
-                "note_title": "Test Note",
-                "note_content_md": "Test Content",
-            },
-        )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(),
-            {"detail": "Invalid input. Please provide valid note details."},
-        )
+        with self.assertLogs("uvicorn.error", level="ERROR") as log:
+            response = self.client.post(
+                "/notes/",
+                params={
+                    "note_title": "Test Note",
+                    "note_content_md": "Test Content",
+                },
+            )
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(
+                response.json(),
+                {"detail": "Invalid request: Invalid input"},
+            )
+            self.assertIn(
+                "ERROR:uvicorn.error:{'status': 'error', 'type': 'user', 'message': 'Invalid input'}",
+                log.output,
+            )
 
     def test_update_note_success(self):
         self.mock_db.read_note.return_value = {
@@ -156,30 +166,30 @@ class TestMain(unittest.TestCase):
         self.mock_db.read_note.return_value = {
             "status": "error",
             "type": "user",
-            "message": "Invalid input. Please provide valid note details.",
+            "message": "Invalid input",
         }
-        response = self.client.put(
-            "/notes/999",
-            params={
-                "note_title": "Updated Note",
-                "note_content_md": "Updated Content",
-            },
-        )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(),
-            {"detail": "Invalid input. Please provide valid note details."},
-        )
+        with self.assertLogs("uvicorn.error", level="ERROR") as log:
+            response = self.client.put(
+                "/notes/999",
+                params={
+                    "note_title": "Updated Note",
+                    "note_content_md": "Updated Content",
+                },
+            )
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(
+                response.json(),
+                {"detail": "Invalid request: Invalid input"},
+            )
+            self.assertIn(
+                "ERROR:uvicorn.error:{'status': 'error', 'type': 'user', 'message': 'Invalid input'}",
+                log.output,
+            )
 
     def test_update_note_failure(self):
         self.mock_db.read_note.return_value = {
             "status": "success",
             "data": ("Test Note", "Test Content", "note_1/web.html"),
-        }
-        self.mock_db.update_note.return_value = {
-            "status": "error",
-            "type": "user",
-            "message": "Invalid input. Please provide valid note details.",
         }
         with patch(
             "fuchs.main.convert_md_to_html",
@@ -187,22 +197,31 @@ class TestMain(unittest.TestCase):
         ):
             with patch(
                 "fuchs.main.put_file_on_hamster",
-                return_value={"status": "success"},
+                return_value={
+                    "status": "error",
+                    "type": "user",
+                    "message": "Invalid input",
+                },
             ):
-                response = self.client.put(
-                    "/notes/1",
-                    params={
-                        "note_title": "Updated Note",
-                        "note_content_md": "Updated Content",
-                    },
-                )
-                self.assertEqual(response.status_code, 400)
-                self.assertEqual(
-                    response.json(),
-                    {
-                        "detail": "Invalid input. Please provide valid note details."
-                    },
-                )
+                with self.assertLogs("uvicorn.error", level="ERROR") as log:
+                    response = self.client.put(
+                        "/notes/1",
+                        params={
+                            "note_title": "Updated Note",
+                            "note_content_md": "Updated Content",
+                        },
+                    )
+                    self.assertEqual(response.status_code, 400)
+                    self.assertEqual(
+                        response.json(),
+                        {
+                            "detail": "Invalid request: Invalid input"
+                        },
+                    )
+                    self.assertIn(
+                        "ERROR:uvicorn.error:{'status': 'error', 'type': 'user', 'message': 'Invalid input'}",
+                        log.output,
+                    )
 
     def test_delete_note_success(self):
         self.mock_db.read_note.return_value = {
@@ -222,14 +241,19 @@ class TestMain(unittest.TestCase):
         self.mock_db.read_note.return_value = {
             "status": "error",
             "type": "user",
-            "message": "Note not found. Please check the note ID.",
+            "message": "Note not found",
         }
-        response = self.client.delete("/notes/999")
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(),
-            {"detail": "Note not found. Please check the note ID."},
-        )
+        with self.assertLogs("uvicorn.error", level="ERROR") as log:
+            response = self.client.delete("/notes/999")
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(
+                response.json(),
+                {"detail": "Invalid request: Note not found"},
+            )
+            self.assertIn(
+                "ERROR:uvicorn.error:{'status': 'error', 'type': 'user', 'message': 'Note not found'}",
+                log.output,
+            )
 
     def test_store_media_success(self):
         self.mock_db.store_meta_of_media.return_value = {
@@ -258,18 +282,23 @@ class TestMain(unittest.TestCase):
         self.mock_db.store_meta_of_media.return_value = {
             "status": "error",
             "type": "user",
-            "message": "Invalid input. Please provide a valid media file.",
+            "message": "Invalid input",
         }
         with open("tests/test_pic.png", "rb") as file:
-            response = self.client.post(
-                "/notes/1/media/",
-                files={"file": ("test_pic.png", file, "image/png")},
+            with self.assertLogs("uvicorn.error", level="ERROR") as log:
+                response = self.client.post(
+                    "/notes/1/media/",
+                    files={"file": ("test_pic.png", file, "image/png")},
+                )
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(
+                response.json(),
+                {"detail": "Invalid request: Invalid input"},
             )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(),
-            {"detail": "Invalid input. Please provide a valid media file."},
-        )
+            self.assertIn(
+                "ERROR:uvicorn.error:{'status': 'error', 'type': 'user', 'message': 'Invalid input'}",
+                log.output,
+            )
 
     def test_update_media_success(self):
         self.mock_db.read_meta_of_media.return_value = {
@@ -297,42 +326,52 @@ class TestMain(unittest.TestCase):
         self.mock_db.read_meta_of_media.return_value = {
             "status": "error",
             "type": "user",
-            "message": "Media not found. Please check the media ID.",
+            "message": "Media not found",
         }
         with open("tests/updated_test_pic.png", "rb") as file:
-            response = self.client.put(
-                "/notes/1/media/999", files={"file": file}
+            with self.assertLogs("uvicorn.error", level="ERROR") as log:
+                response = self.client.put(
+                    "/notes/1/media/999", files={"file": file}
+                )
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(
+                response.json(),
+                {"detail": "Invalid request: Media not found"},
             )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(),
-            {"detail": "Invalid input. Please provide a valid media file."},
-        )
+            self.assertIn(
+                "ERROR:uvicorn.error:{'status': 'error', 'type': 'user', 'message': 'Media not found'}",
+                log.output,
+            )
 
     def test_update_media_failure(self):
         self.mock_db.read_meta_of_media.return_value = {
             "status": "success",
             "data": (1, "media_name", "note_1/media/1"),
         }
-        self.mock_db.update_meta_of_media.return_value = {
-            "status": "error",
-            "type": "user",
-            "message": "Invalid input. Please provide valid media details.",
-        }
         with patch(
-            "fuchs.main.put_file_on_hamster", return_value={"status": "error"}
+            "fuchs.main.put_file_on_hamster",
+            return_value={
+                "status": "error",
+                "type": "user",
+                "message": "Invalid input",
+            },
         ):
             with open("tests/updated_test_pic.png", "rb") as file:
-                response = self.client.put(
-                    "/notes/1/media/1", files={"file": file}
-                )
-                self.assertEqual(response.status_code, 400)
-                self.assertEqual(
-                    response.json(),
-                    {
-                        "detail": "Invalid input. Please provide a valid media file."
-                    },
-                )
+                with self.assertLogs("uvicorn.error", level="ERROR") as log:
+                    response = self.client.put(
+                        "/notes/1/media/1", files={"file": file}
+                    )
+                    self.assertEqual(response.status_code, 400)
+                    self.assertEqual(
+                        response.json(),
+                        {
+                            "detail": "Invalid request: Invalid input"
+                        },
+                    )
+                    self.assertIn(
+                        "ERROR:uvicorn.error:{'status': 'error', 'type': 'user', 'message': 'Invalid input'}",
+                        log.output,
+                    )
 
     def test_delete_media_success(self):
         self.mock_db.read_meta_of_media.return_value = {
@@ -355,14 +394,19 @@ class TestMain(unittest.TestCase):
         self.mock_db.read_meta_of_media.return_value = {
             "status": "error",
             "type": "user",
-            "message": "Media not found. Please check the media ID.",
+            "message": "Media not found",
         }
-        response = self.client.delete("/notes/1/media/999")
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(),
-            {"detail": "Media not found. Please check the media ID."},
-        )
+        with self.assertLogs("uvicorn.error", level="ERROR") as log:
+            response = self.client.delete("/notes/1/media/999")
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(
+                response.json(),
+                {"detail": "Invalid request: Media not found"},
+            )
+            self.assertIn(
+                "ERROR:uvicorn.error:{'status': 'error', 'type': 'user', 'message': 'Media not found'}",
+                log.output,
+            )
 
 
 if __name__ == "__main__":

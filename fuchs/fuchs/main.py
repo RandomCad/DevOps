@@ -1,5 +1,7 @@
 """defining the API endpoints for the notes application"""
 
+import logging
+
 from fastapi import FastAPI, Depends, UploadFile, HTTPException
 
 from .helpers import (
@@ -9,19 +11,26 @@ from .helpers import (
 )
 from .database import DatabaseConnection, get_db
 
+logger = logging.getLogger("uvicorn.error")
 
 NOTE_PATH = "note_{note_id}/web.html"
 MEDIA_PATH = "note_{note_id}/media/{media_id}"
 
 app = FastAPI()
 
+
 def raise_errors(result):
     if result["status"] == "error":
-        (code, kind) = (500, "Server error occured") if result.get("type") == "server" else (400, "Invalid request")
-        raise HTTPException(
-            status_code=code,
-            detail=f"{kind}: {result["message"]}"
+        logger.error(result)
+        (code, kind) = (
+            (500, "Server error occured")
+            if result.get("type") == "server"
+            else (400, "Invalid request")
         )
+        raise HTTPException(
+            status_code=code, detail=f"{kind}: {result['message']}"
+        )
+
 
 @app.get("/notes")
 def read_all_notes(db: DatabaseConnection = Depends(get_db)):
