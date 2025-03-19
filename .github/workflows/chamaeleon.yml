@@ -9,10 +9,24 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build_chamaeleon:
-
+  check_duplicate:
     runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+    - id: skip_check
+      uses: fkirc/skip-duplicate-actions@v5
+      with:
+        concurrent_skipping: "same_content_newer"
+        paths:
+        - "chamaeleon/**"
+        - "Cargo.toml"
+        - "Cargo.lock"
 
+  build_chamaeleon:
+    runs-on: ubuntu-latest
+    needs: check_duplicate
+    if: needs.check_duplicate.outputs.should_skip != 'true'
     steps:
     - uses: actions/checkout@v4
     - name: Setup cache
