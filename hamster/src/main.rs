@@ -6,6 +6,7 @@ use rocket::{
     launch, put, routes, State,
 };
 
+/// the path where all files are stored
 static FILE_PATH: &str = "./files";
 
 #[put("/<path..>", data = "<file>")]
