@@ -13,10 +13,11 @@ class TestHelpers(unittest.TestCase):
     def test_put_file_on_hamster_success(self, mock_put):
         mock_response = MagicMock()
         mock_response.raise_for_status.return_value = None
+        mock_response.text = ""
         mock_put.return_value = mock_response
 
         result = put_file_on_hamster("test_path", b"test_file")
-        self.assertEqual(result, {"status": "success"})
+        self.assertEqual(result, {"status": "success", "html": ""})
 
     @patch("fuchs.helpers.requests.put")
     def test_put_file_on_hamster_http_error(self, mock_put):
@@ -51,10 +52,11 @@ class TestHelpers(unittest.TestCase):
     def test_delete_file_on_hamster_success(self, mock_delete):
         mock_response = MagicMock()
         mock_response.raise_for_status.return_value = None
+        mock_response.text = ""
         mock_delete.return_value = mock_response
 
         result = delete_file_on_hamster("test_path")
-        self.assertEqual(result, {"status": "success"})
+        self.assertEqual(result, {"status": "success", "html": ""})
 
     @patch("fuchs.helpers.requests.delete")
     def test_delete_file_on_hamster_http_error(self, mock_delete):
