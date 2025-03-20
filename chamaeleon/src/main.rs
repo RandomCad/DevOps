@@ -10,9 +10,11 @@ fn rocket() -> _ {
 
 #[cfg(test)]
 mod test {
+    use super::*;
+
     #[test]
     fn md() {
-        let html = markdown::to_html("## Hello, *world*!");
+        let html = convert("## Hello, *world*!".to_string());
         assert_eq!(html, "<h2>Hello, <em>world</em>!</h2>");
     }
 }
