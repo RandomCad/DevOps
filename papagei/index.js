@@ -1,20 +1,27 @@
 /*
 tbd:
-    note anzeigen:
+
+    api:
         get_note_by_id
-
-    note navigator updaten mit daten von api:
         get_all_note_navigator
+        delete_note
+
+        save: give data to api
+            needs papagei-save
+
+    
+    papagei:
+        edit: open a edit mode
+        upload images and events
+        save: extrakt data von note
+
+        open_note: images, html, markdown ????
 
 
-    onclick_note_navigator
+    extra:
+        change background between default backgrounds
+        date in note_navigator
 
-    open_note
-
-    edit
-    save_node
-
-    delete_note_main -> tell api to delete note with note_id
 */
 
 // note navigator
@@ -71,18 +78,28 @@ function onclick_note_navigator(note_id) {
 
 function create_new_note() {
     console.log("Create new note");
-
     check_if_note_needs_to_be_saved();
     let now = new Date();
-    open_note(0, 'Neue Notiz', now.toISOString(), 'Hier ist Platz für Ihre Ideen und Gedanken', 'Lollo');
+    get_neue_notiz_note()
+    .then(data => {
+        open_note({note_id: data.id,
+            title: data.title,
+            date: now.toISOString(),
+            author: data.author,
+            content: data.content,
+            link: data.link
+        });
+    });
+
+    //open_note(0, 'Neue Notiz', now.toISOString(), 'Hier ist Platz für Ihre Ideen und Gedanken', 'Lollo');
 }
 
-function open_note(note_id, title, date, content, author) {
+function open_note({note_id, title, date, author, content, link}) {
+    set_note_main_id(note_id);
     show_note_title(title);
     show_note_date(date)
     show_note_author(author);
-    show_note_content(content);
-    set_note_main_id(note_id);
+    show_note_content({content: content, link: link});
 }
 
 function show_note_title(title) {
@@ -104,9 +121,21 @@ function show_note_author(author) {
     var note_author = document.getElementsByClassName("note_main_author")[0];
     note_author.innerHTML = author;
 }
-function show_note_content(content) {
+function show_note_content({content, link}) {
     var note_content = document.getElementsByClassName("note_main_content")[0];
-    note_content.innerHTML = content;
+    var note_content_iframe = document.getElementsByClassName("note_main_content_iframe")[0];
+    if (link) {
+        note_content_iframe.setAttribute("src", link);
+        note_content.innerHTML = "";
+        note_content.style.display = "none";
+        note_content_iframe.style.display = "block";
+    }
+    else {
+        note_content.innerHTML = content;
+        note_content_iframe.setAttribute("src", "about:blank");
+        note_content.style.display = "block";
+        note_content_iframe.style.display = "none";
+    }
 }
 
 function get_note_by_id(note_id) {
@@ -120,11 +149,14 @@ function get_note_by_id(note_id) {
 function open_note_by_id(note_id) {
     get_note_by_id(note_id)
         .then(data => {
-            open_note(data.id,
-                data.title,
-                data.date,
-                data.content,
-                data.author);
+            open_note({
+                note_id: data.id,
+                title: data.title,
+                date: data.date,
+                author: data.author,
+                content: data.content,
+                link: data.link
+            });
         });
 }
 
@@ -132,6 +164,7 @@ function open_note_by_id(note_id) {
 
 
 function open_note_on_start() {
+    /*
     var note_navigator = document.getElementsByClassName("note_navigator")[0];
     if (note_navigator) {
         open_note_by_id(note_navigator.getAttribute("note_id"));
@@ -139,6 +172,8 @@ function open_note_on_start() {
     else {
         create_new_note();
     }
+    */
+    create_new_note();
 }
 
 function check_if_note_needs_to_be_saved(params) {
@@ -260,7 +295,7 @@ function get_example_note() {
     return fetch("examples/example.json")
         .then(response => {
             if (!response.ok) {
-                throw new Error("Fehler beim Öffnen der exaple.json");
+                throw new Error("Fehler beim Öffnen von exaple.json");
             }
             return response.json();
         })
@@ -270,6 +305,22 @@ function get_example_note() {
         .catch(error => {
             console.error("Error: ", error)
         })
+}
+
+function get_neue_notiz_note() {
+    return fetch("neue_notiz.json")
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Fehler beim Öffnen von neue_notiz.json");
+        }
+        return response.json();
+    })
+    .then(data => {
+        return data;
+    })
+    .catch(error => {
+        console.error("Error: ", error)
+    })
 }
 
 function get_example_all_note_navigator() {

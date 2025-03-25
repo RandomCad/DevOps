@@ -41,6 +41,10 @@
             <article class="note_main_body">
                 <div class="note_main_content">
                 </div>
+                <iframe class="note_main_content_iframe" src="about:blank">
+                </iframe>
+                <textarea name="Markdown Editor" id="textarea_markdown" placeholder="Hier ist Platz für Ihr Markdown">
+                </textarea>
             </article>
             <div class="note_files">
             </div>
@@ -48,7 +52,7 @@
         <script>
         // window.onload = test_create_note_navigator(5);
         window.onload = function() {
-          update_all_note_navigator();
+          update_all_note_navigator()
           open_note_on_start();
         };
         </script>
