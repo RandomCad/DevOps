@@ -1,0 +1,429 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "FastAPI",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/notes": {
+      "get": {
+        "summary": "Read All Notes",
+        "description": "returns a list of all notes, containing the id and title of each note",
+        "operationId": "read_all_notes_notes_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notes/{note_id}": {
+      "get": {
+        "summary": "Read Note",
+        "description": "returns the markdown content of a note plus the metadata of pictures\nof the note",
+        "operationId": "read_note_notes__note_id__get",
+        "parameters": [
+          {
+            "name": "note_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Note Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update Note",
+        "description": "updates the content & title of a note.\n\ntakes the new markdown content of the note as input, converts it to html,\nupdates the old markdown (on db) and html (on hamster).",
+        "operationId": "update_note_notes__note_id__put",
+        "parameters": [
+          {
+            "name": "note_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Note Id"
+            }
+          },
+          {
+            "name": "note_title",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Note Title"
+            }
+          },
+          {
+            "name": "note_content_md",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Note Content Md"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Note",
+        "description": "deletes a note.\n\nremoves both the markdown (db) and the html content (hamster).",
+        "operationId": "delete_note_notes__note_id__delete",
+        "parameters": [
+          {
+            "name": "note_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Note Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notes/": {
+      "post": {
+        "summary": "Create Note",
+        "description": "creates a new note.\n\ntakes the markdown content of the note as input, converts it to html and\nstores the markdown in the db and distributes the html over the hamster.\n\nreturns the path to the note for the hamster",
+        "operationId": "create_note_notes__post",
+        "parameters": [
+          {
+            "name": "note_title",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Note Title"
+            }
+          },
+          {
+            "name": "note_content_md",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Note Content Md"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notes/{note_id}/media/": {
+      "post": {
+        "summary": "Store Media",
+        "description": "stores a picture on the hamster.\n\nreturns the path to the picture.",
+        "operationId": "store_media_notes__note_id__media__post",
+        "parameters": [
+          {
+            "name": "note_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Note Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_store_media_notes__note_id__media__post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notes/{note_id}/media/{media_id}": {
+      "put": {
+        "summary": "Update Media",
+        "description": "updates a picture on the hamster.\n\ntakes the new picture content as input and updates the picture on the\nhamster.",
+        "operationId": "update_media_notes__note_id__media__media_id__put",
+        "parameters": [
+          {
+            "name": "note_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Note Id"
+            }
+          },
+          {
+            "name": "media_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Media Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_update_media_notes__note_id__media__media_id__put"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Pic",
+        "description": "deletes a picture and its metadata.",
+        "operationId": "delete_pic_notes__note_id__media__media_id__delete",
+        "parameters": [
+          {
+            "name": "note_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Note Id"
+            }
+          },
+          {
+            "name": "media_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Media Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Body_store_media_notes__note_id__media__post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_store_media_notes__note_id__media__post"
+      },
+      "Body_update_media_notes__note_id__media__media_id__put": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_update_media_notes__note_id__media__media_id__put"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
