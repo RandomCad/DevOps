@@ -22,7 +22,7 @@ jobs:
       with:
         concurrent_skipping: "same_content_newer"
         # also check fuchs if hamster/chamaeleon are changed
-        # to prevent accindetal breaking changes
+        # to prevent accidental breaking changes
         paths: '["fuchs/**", "hamster/**", "chamaeleon/**", "Cargo.toml", "Cargo.lock"]'
 
   test_build_hamster:
