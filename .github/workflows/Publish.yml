@@ -9,6 +9,8 @@ jobs:
   test_services:
     uses: ./.github/workflows/fuchs.yml
     secrets: inherit
+  test_papagei: #don't know for what this is needed ad the moment
+    uses: ./.github/workflows/papagei.yml  # use the callable tests job to run tests
 
   build_images:
     strategy:
