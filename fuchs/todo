@@ -18,3 +18,6 @@ the hamster, no inconsistencies arise (because it get's rolled back)
 
 * [ ] revise unittests
   * [ ] extract tests on failure in seperate test cases (espacially in test_main to test on all failing func calls)
+* [ ] revise integration tests
+  * [X] use the tests on failure!
+  * [ ] widen test cases (e.g. for update_media with valid but unrelated note_id & media_id [invalid note])

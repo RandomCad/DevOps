@@ -32,6 +32,15 @@ def raise_errors(result):
         )
 
 
+def test_not_empty(**kwargs: str):
+    for key, val in kwargs.items():
+        if not val:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid request: Empty input {key}",
+            )
+
+
 @app.get("/notes")
 def read_all_notes(db: DatabaseConnection = Depends(get_db)):
     """returns a list of all notes, containing the id and title of each note"""
@@ -72,6 +81,8 @@ def create_note(
     takes the markdown content of the note as input, converts it to html and
     stores the markdown in the db and distributes the html over the hamster.\n
     returns the path to the note for the hamster"""
+    test_not_empty(note_title=note_title, note_content_md=note_content_md)
+
     result = db.write_note(note_title, note_content_md)
     raise_errors(result)
     note_id = result["data"]
@@ -100,6 +111,7 @@ def update_note(
     """updates the content & title of a note.\n
     takes the new markdown content of the note as input, converts it to html,
     updates the old markdown (on db) and html (on hamster).\n"""
+    test_not_empty(note_title=note_title, note_content_md=note_content_md)
     result = db.read_note(note_id)
     raise_errors(result)
     note_path = result["data"][2]
@@ -168,6 +180,11 @@ def update_media(
     hamster."""
     result = db.read_meta_of_media(media_id)
     raise_errors(result)
+    if result["data"][0] != note_id:
+        result["status"] = "error"
+        result["type"] = "client"
+        result["message"] = "Media not found"
+        raise_errors(result)
     media_path = result["data"][2]
 
     result = put_file_on_hamster(media_path, file.file)
@@ -186,6 +203,11 @@ def delete_media(
     """deletes a media file and its metadata."""
     result = db.read_meta_of_media(media_id)
     raise_errors(result)
+    if result["data"][0] != note_id:
+        result["status"] = "error"
+        result["type"] = "client"
+        result["message"] = "Media not found"
+        raise_errors(result)
     media_path = result["data"][2]
 
     result = delete_file_on_hamster(media_path)

@@ -214,9 +214,7 @@ class TestMain(unittest.TestCase):
                     self.assertEqual(response.status_code, 400)
                     self.assertEqual(
                         response.json(),
-                        {
-                            "detail": "Invalid request: Invalid input"
-                        },
+                        {"detail": "Invalid request: Invalid input"},
                     )
                     self.assertIn(
                         "ERROR:uvicorn.error:{'status': 'error', 'type': 'user', 'message': 'Invalid input'}",
@@ -364,14 +362,37 @@ class TestMain(unittest.TestCase):
                     self.assertEqual(response.status_code, 400)
                     self.assertEqual(
                         response.json(),
-                        {
-                            "detail": "Invalid request: Invalid input"
-                        },
+                        {"detail": "Invalid request: Invalid input"},
                     )
                     self.assertIn(
                         "ERROR:uvicorn.error:{'status': 'error', 'type': 'user', 'message': 'Invalid input'}",
                         log.output,
                     )
+
+    def test_update_media_invalid_note(self):
+        """Test updating media with a mismatched note ID."""
+        self.mock_db.read_meta_of_media.return_value = {
+            "status": "success",
+            "data": (2, "media_name", "note_2/media/1"),  # Note ID mismatch
+        }
+        self.mock_db.read_meta_of_media.return_value = {
+            "status": "success",
+            "data": (1, "media_name", "note_1/media/1"),
+        }
+        with open("tests/updated_test_pic.png", "rb") as file:
+            with self.assertLogs("uvicorn.error", level="ERROR") as log:
+                response = self.client.put(
+                    "/notes/999/media/1", files={"file": file}
+                )
+                self.assertEqual(response.status_code, 400)
+                self.assertEqual(
+                    response.json(),
+                    {"detail": "Invalid request: Media not found"},
+                )
+                self.assertIn(
+                    "ERROR:uvicorn.error:{'status': 'error', 'data': (1, 'media_name', 'note_1/media/1'), 'type': 'client', 'message': 'Media not found'}",
+                    log.output,
+                )
 
     def test_delete_media_success(self):
         self.mock_db.read_meta_of_media.return_value = {
@@ -405,6 +426,49 @@ class TestMain(unittest.TestCase):
             )
             self.assertIn(
                 "ERROR:uvicorn.error:{'status': 'error', 'type': 'user', 'message': 'Media not found'}",
+                log.output,
+            )
+
+    def test_delete_media_failure(self):
+        self.mock_db.read_meta_of_media.return_value = {
+            "status": "success",
+            "data": (1, "media_name", "note_1/media/1"),
+        }
+        with patch(
+            "fuchs.main.delete_file_on_hamster",
+            return_value={
+                "status": "error",
+                "type": "user",
+                "message": "Invalid input",
+            },
+        ):
+            with self.assertLogs("uvicorn.error", level="ERROR") as log:
+                response = self.client.delete("/notes/1/media/1")
+                self.assertEqual(response.status_code, 400)
+                self.assertEqual(
+                    response.json(),
+                    {"detail": "Invalid request: Invalid input"},
+                )
+                self.assertIn(
+                    "ERROR:uvicorn.error:{'status': 'error', 'type': 'user', 'message': 'Invalid input'}",
+                    log.output,
+                )
+
+    def test_delete_media_invalid_note(self):
+        """Test deleting media with a mismatched note ID."""
+        self.mock_db.read_meta_of_media.return_value = {
+            "status": "success",
+            "data": (1, "media_name", "note_1/media/1"),  # Note ID mismatch
+        }
+        with self.assertLogs("uvicorn.error", level="ERROR") as log:
+            response = self.client.delete("/notes/999/media/1")
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(
+                response.json(),
+                {"detail": "Invalid request: Media not found"},
+            )
+            self.assertIn(
+                "ERROR:uvicorn.error:{'status': 'error', 'data': (1, 'media_name', 'note_1/media/1'), 'type': 'client', 'message': 'Media not found'}",
                 log.output,
             )
 
