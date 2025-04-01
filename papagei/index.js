@@ -28,7 +28,7 @@ tbd:
 "use strict";
 
 const FUCHS_BASE_URL = "http://127.0.0.1:8000"
-const HAMSTER_BASE_URL = "http://127.0.0.1:8001"
+const HAMSTER_BASE_URL = "http://127.0.0.1:8000"
 
 function create_note_navigator(note_id, title) {
     var div = document.createElement("div");
