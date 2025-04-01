@@ -27,9 +27,6 @@ tbd:
 // note navigator
 "use strict";
 
-const FUCHS_BASE_URL = "http://127.0.0.1:8000"
-const HAMSTER_BASE_URL = "http://127.0.0.1:8000"
-
 function create_note_navigator(note_id, title) {
     var div = document.createElement("div");
     var div_bg = document.createElement("div");
@@ -285,7 +282,7 @@ function get_time_and_day() {
 function get_all_note_navigator() {
     // get json from api with all note ids and titles
   
-    return fetch(FUCHS_BASE_URL + '/notes')
+    return fetch('/notes')
         .then(response => {
             if (!response.ok) {
                 throw new Error("Fehler beim Abfragen aller Notes");
@@ -303,7 +300,7 @@ function get_all_note_navigator() {
 }
 
 function get_note_by_id(note_id) {
-    return fetch(FUCHS_BASE_URL + '/notes/' + note_id)
+    return fetch('/notes/' + note_id)
         .then(response => {
             if (!response.ok) {
                 throw new Error("Fehler beim Abfragen von Note mit ID: " + note_id);
@@ -326,7 +323,7 @@ function get_note_by_id(note_id) {
 
 function delete_note_by_id(note_id) {
     console.log(`Delete Note with ID: ${note_id}`);
-    fetch(FUCHS_BASE_URL + "/notes/" + note_id, {
+    fetch("/notes/" + note_id, {
             method: 'DELETE'
         })
         .then(response => {

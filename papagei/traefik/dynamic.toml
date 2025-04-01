@@ -1,6 +1,6 @@
 [http.routers.fuchs]
 entryPoints = ["web"]
-rule = "PathPrefix(`/notes`)"
+rule = "PathPrefix(`/notes`) || PathPrefix(`/docs`) || PathPrefix(`/openapi`)"
 priority = 2
 service = "fuchs"
 
