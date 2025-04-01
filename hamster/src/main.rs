@@ -1,6 +1,12 @@
 use std::{fs, io, path::PathBuf};
 
-use rocket::{delete, fs::{FileServer, TempFile}, launch, put, routes, shield::{Frame, Shield}, State};
+use rocket::{
+    delete,
+    fs::{FileServer, TempFile},
+    launch, put, routes,
+    shield::{Frame, Shield},
+    State,
+};
 
 static FILE_PATH: &str = "./files";
 
@@ -20,8 +26,10 @@ fn delete_file(path: PathBuf, base: &State<PathBuf>) -> io::Result<()> {
 
 #[launch]
 fn rocket() -> _ {
-    let base = PathBuf::from(FILE_PATH).canonicalize().expect("should be valid");
-    let shield = Shield::default().enable(Frame::SameOrigin);
+    let base = PathBuf::from(FILE_PATH)
+        .canonicalize()
+        .expect("should be valid");
+    let shield = Shield::default().disable::<Frame>();
     rocket::build()
         .mount("/", routes![set_file, delete_file])
         .mount("/", FileServer::from(base.clone()))
