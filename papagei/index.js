@@ -27,6 +27,9 @@ tbd:
 // note navigator
 "use strict";
 
+const FUCHS_BASE_URL = "http://127.0.0.1:8000"
+const HAMSTER_BASE_URL = "http://127.0.0.1:8001"
+
 function create_note_navigator(note_id, title) {
     var div = document.createElement("div");
     var div_bg = document.createElement("div");
@@ -47,11 +50,6 @@ function create_note_navigator(note_id, title) {
     else {
         console.error('create_note_navigator: no element with class "note_navigator_box" found');
     }
-}
-
-function get_all_note_navigator() {
-    // get json from api with all note ids and titles
-    return get_example_all_note_navigator();
 }
 
 function update_all_note_navigator() {
@@ -125,7 +123,7 @@ function show_note_content({content, link}) {
     var note_content = document.getElementsByClassName("note_main_content")[0];
     var note_content_iframe = document.getElementsByClassName("note_main_content_iframe")[0];
     if (link) {
-        note_content_iframe.setAttribute("src", link);
+        note_content_iframe.setAttribute("src", HAMSTER_BASE_URL + "/" + link);
         note_content.innerHTML = "";
         note_content.style.display = "none";
         note_content_iframe.style.display = "block";
@@ -138,24 +136,17 @@ function show_note_content({content, link}) {
     }
 }
 
-function get_note_by_id(note_id) {
-    // tbd get note from api with note_id
-    return get_example_note()
-    .then(data => {
-        return data;
-    });
-}
-
 function open_note_by_id(note_id) {
     get_note_by_id(note_id)
         .then(data => {
+            console.log(data);
             open_note({
                 note_id: data.id,
                 title: data.title,
                 date: data.date,
                 author: data.author,
                 content: data.content,
-                link: data.link
+                link: data.path
             });
         });
 }
@@ -270,7 +261,7 @@ function clear_note_main_id() {
 function delete_note() {
     var note_id = get_note_main_id();
     if (note_id) {
-        // tell api to delete note with note_id
+        delete_note_by_id(note_id)
         clear_note_main_id();
         clear_note_main_edit_mode();
         create_new_note();
@@ -286,6 +277,83 @@ function show_error_and_reload(message = "Ein Fehler ist aufgetreten! Seite neu 
 
 function get_time_and_day() {
     
+}
+
+
+// communicate with fuchs
+
+function get_all_note_navigator() {
+    // get json from api with all note ids and titles
+  
+    return fetch(FUCHS_BASE_URL + '/notes')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Fehler beim Abfragen aller Notes");
+            }
+            return response.json(); // Antwort als JSON parsen
+        })
+        .then(data => {
+            return data.notes;
+        }) // Daten verwenden
+        .catch(error => {
+            console.error('Fehler:', error);
+        });
+
+    // return get_example_all_note_navigator();
+}
+
+function get_note_by_id(note_id) {
+    return fetch(FUCHS_BASE_URL + '/notes/' + note_id)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Fehler beim Abfragen von Note mit ID: " + note_id);
+            }
+            return response.json(); // Antwort als JSON parsen
+        })
+        .then(data => {
+            console.log(data);
+            return data;
+        }) // Daten verwenden
+        .catch(error => {
+            console.error('Fehler:', error);
+        });
+
+    // return get_example_note()
+    // .then(data => {
+    //     return data;
+    // });
+}
+
+function delete_note_by_id(note_id) {
+    console.log(`Delete Note with ID: ${note_id}`);
+    fetch(FUCHS_BASE_URL + "/notes/" + note_id, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Fehler beim Löschen von Note mit ID: ${note_id} ${response.status} ${response.statusText}`);
+            }
+            console.log(response);
+            response.json();
+        })
+        .then(data => console.log('Löschen Erfolgreich:', data))
+        .catch(error => console.error('Fehler2:', error));
+      
+    // fetch('http://127.0.0.1:8000/notes/0', {
+    //     method: 'DELETE',
+    //     headers: {
+    //       'Accept': 'application/json'
+    //     }
+    //   })
+    //   .then(response => {
+    //     if (!response.ok) {
+    //       throw new Error(`Fehler: ${response.status} ${response.statusText}`);
+    //     }
+    //     return response.json().catch(() => ({})); // Falls keine JSON-Antwort kommt
+    //   })
+    //   .then(data => console.log('Löschen erfolgreich:', data))
+    //   .catch(error => console.error('Fehler:', error));
+      
 }
 
 

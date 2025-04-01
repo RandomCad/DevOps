@@ -204,7 +204,7 @@
     
 }
 
-#textarea_markdown {
+.textarea_markdown {
     display: none;
     resize: none;
     flex: 1;
