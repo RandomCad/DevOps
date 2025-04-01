@@ -22,12 +22,10 @@
 
 services:
   hamster:
-    image: balindner/hamster
-    volumes:
-    - type: bind
-      source: .
-      target: /app/files
-      read_only: true
+    build:
+      dockerfile_inline: |
+        FROM balindner/hamster
+        COPY . /app/files
   chamaeleon:
     image: balindner/chamaeleon
   fuchs:
@@ -57,4 +55,5 @@ services:
       target: /etc/traefik
       read_only: true
     ports:
-    - 127.0.0.1:8000:8000
+    - 127.0.0.1:80:80
+    - 127.0.0.1:8080:8080

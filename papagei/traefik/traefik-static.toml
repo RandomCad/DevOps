@@ -1,5 +1,0 @@
-entryPoints.web.address = ":8000"
-
-providers.file = "/etc/traefik/traefik-dynamic.toml"
-
-api.insecure = true
