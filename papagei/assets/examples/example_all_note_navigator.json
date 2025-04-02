@@ -1,0 +1,24 @@
+{
+    "note_navigators": [
+        {
+            "title":"Notiz 1",
+            "id":"1001"
+        },
+        {
+            "title":"Notiz 2",
+            "id":"1002"
+        },
+        {
+            "title":"Notiz 3",
+            "id":"1003"
+        },
+        {
+            "title":"Notiz 4",
+            "id":"1004"
+        },
+        {
+            "title":"Notiz 5",
+            "id":"1005"
+        }
+    ]
+}
