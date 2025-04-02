@@ -373,7 +373,7 @@ function get_example_note() {
 }
 
 function get_neue_notiz_note() {
-    return fetch("neue_notiz.json")
+    return fetch("assets/neue_notiz.json")
     .then(response => {
         if (!response.ok) {
             throw new Error("Fehler beim Öffnen von neue_notiz.json");
