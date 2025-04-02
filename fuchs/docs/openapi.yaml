@@ -20,6 +20,58 @@ components:
       - file
       title: Body_update_media_notes__note_id__media__media_id__put
       type: object
+    ClientErrorResponse:
+      properties:
+        detail:
+          description: Error message describing the issue
+          examples:
+          - 'Invalid request: Missing title'
+          title: Detail
+          type: string
+      required:
+      - detail
+      title: ClientErrorResponse
+      type: object
+    CreateResponse:
+      properties:
+        id:
+          description: ID of the newly created resource
+          examples:
+          - 1
+          title: Id
+          type: integer
+        path:
+          description: Path to the newly created resource
+          examples:
+          - note_1/web.html
+          title: Path
+          type: string
+        status:
+          const: created
+          description: Status of the creation operation
+          examples:
+          - created
+          title: Status
+          type: string
+      required:
+      - status
+      - id
+      - path
+      title: CreateResponse
+      type: object
+    DeleteResponse:
+      properties:
+        status:
+          const: deleted
+          description: Status of the delete operation
+          examples:
+          - deleted
+          title: Status
+          type: string
+      required:
+      - status
+      title: DeleteResponse
+      type: object
     HTTPValidationError:
       properties:
         detail:
@@ -28,6 +80,135 @@ components:
           title: Detail
           type: array
       title: HTTPValidationError
+      type: object
+    MediaResponse:
+      properties:
+        id:
+          description: ID of the media file
+          examples:
+          - 1
+          title: Id
+          type: integer
+        path:
+          description: Path to the media file on the hamster server
+          examples:
+          - note_1/media/1
+          title: Media Path
+          type: string
+      required:
+      - id
+      - path
+      title: MediaResponse
+      type: object
+    NoteResponse:
+      properties:
+        content:
+          description: Markdown content of the note
+          examples:
+          - '# My first note
+
+
+            This is my first note.'
+          title: Note Content
+          type: string
+        id:
+          description: ID of the note
+          examples:
+          - 1
+          title: Note ID
+          type: integer
+        media:
+          items:
+            $ref: '#/components/schemas/MediaResponse'
+          title: Media
+          type: array
+        path:
+          description: Path to the note on the hamster server
+          examples:
+          - note_1/web.html
+          title: Note Path
+          type: string
+        title:
+          description: Title of the note
+          examples:
+          - My first note
+          title: Note Title
+          type: string
+      required:
+      - id
+      - title
+      - content
+      - path
+      - media
+      title: NoteResponse
+      type: object
+    NotesResponse:
+      properties:
+        notes:
+          description: List of reduced note objects
+          examples:
+          - - id: 1
+              title: My first note
+            - id: 2
+              title: My second note
+          items:
+            $ref: '#/components/schemas/ReducedNoteResponse'
+          title: Notes
+          type: array
+      required:
+      - notes
+      title: NotesResponse
+      type: object
+    ReducedNoteResponse:
+      properties:
+        id:
+          description: ID of the note
+          examples:
+          - 1
+          title: Id
+          type: integer
+        title:
+          description: Title of the note
+          examples:
+          - My first note
+          title: Title
+          type: string
+      required:
+      - id
+      - title
+      title: ReducedNoteResponse
+      type: object
+    ServerErrorResponse:
+      properties:
+        detail:
+          description: Error message describing the issue
+          examples:
+          - 'Server error: Database connection failed'
+          title: Detail
+          type: string
+      required:
+      - detail
+      title: ServerErrorResponse
+      type: object
+    UpdateResponse:
+      properties:
+        id:
+          description: ID of the updated resource
+          examples:
+          - 1
+          title: Id
+          type: integer
+        status:
+          const: updated
+          description: Status of the update operation
+          examples:
+          - updated
+          title: Status
+          type: string
+      required:
+      - status
+      - id
+      title: UpdateResponse
       type: object
     ValidationError:
       properties:
@@ -57,16 +238,30 @@ openapi: 3.1.0
 paths:
   /notes:
     get:
-      description: returns a list of all notes, containing the id and title of each
-        note
+      description: returns a list of all notes
       operationId: read_all_notes_notes_get
       responses:
         '200':
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/NotesResponse'
           description: Successful Response
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientErrorResponse'
+          description: Invalid Request
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerErrorResponse'
+          description: Server Error
       summary: Read All Notes
+      tags:
+      - notes
   /notes/:
     post:
       description: 'creates a new note.
@@ -96,15 +291,30 @@ paths:
         '200':
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/CreateResponse'
           description: Successful Response
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientErrorResponse'
+          description: Invalid Request
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerErrorResponse'
+          description: Server Error
       summary: Create Note
+      tags:
+      - notes
   /notes/{note_id}:
     delete:
       description: 'deletes a note.
@@ -123,15 +333,30 @@ paths:
         '200':
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
           description: Successful Response
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientErrorResponse'
+          description: Invalid Request
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerErrorResponse'
+          description: Server Error
       summary: Delete Note
+      tags:
+      - notes
     get:
       description: 'returns the markdown content of a note plus the metadata of pictures
 
@@ -148,15 +373,30 @@ paths:
         '200':
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/NoteResponse'
           description: Successful Response
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientErrorResponse'
+          description: Invalid Request
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerErrorResponse'
+          description: Server Error
       summary: Read Note
+      tags:
+      - notes
     put:
       description: 'updates the content & title of a note.
 
@@ -188,15 +428,30 @@ paths:
         '200':
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/UpdateResponse'
           description: Successful Response
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientErrorResponse'
+          description: Invalid Request
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerErrorResponse'
+          description: Server Error
       summary: Update Note
+      tags:
+      - notes
   /notes/{note_id}/media/:
     post:
       description: 'stores a picture on the hamster.
@@ -221,19 +476,34 @@ paths:
         '200':
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/CreateResponse'
           description: Successful Response
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientErrorResponse'
+          description: Invalid Request
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerErrorResponse'
+          description: Server Error
       summary: Store Media
+      tags:
+      - media
   /notes/{note_id}/media/{media_id}:
     delete:
-      description: deletes a picture and its metadata.
-      operationId: delete_pic_notes__note_id__media__media_id__delete
+      description: deletes a media file and its metadata.
+      operationId: delete_media_notes__note_id__media__media_id__delete
       parameters:
       - in: path
         name: note_id
@@ -251,15 +521,30 @@ paths:
         '200':
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
           description: Successful Response
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientErrorResponse'
+          description: Invalid Request
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
-      summary: Delete Pic
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerErrorResponse'
+          description: Server Error
+      summary: Delete Media
+      tags:
+      - media
     put:
       description: 'updates a picture on the hamster.
 
@@ -291,12 +576,27 @@ paths:
         '200':
           content:
             application/json:
-              schema: {}
+              schema:
+                $ref: '#/components/schemas/UpdateResponse'
           description: Successful Response
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientErrorResponse'
+          description: Invalid Request
         '422':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
           description: Validation Error
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerErrorResponse'
+          description: Server Error
       summary: Update Media
+      tags:
+      - media

@@ -5,11 +5,10 @@
 ### main.py
 
 * [ ] evalute async functions and implement them
-* [ ] implement more detailed openapi-conf
-* [X] improve error handling
-  * [X] embedd api execution in try-except blocks to supply proper error messages
-  * [X] move db-assertions to database.py
-  * [X] log real cause on server
+* [X] implement more detailed openapi-conf
+  * [X] implement return_types
+  * [X] group responses (notes, media)
+  * [X] add example return values
 * [ ] implement a transaction like concept, so that e.g. if saving the
 markdown-content of a note fails, but the converted html is already stored on
 the hamster, no inconsistencies arise (because it get's rolled back)
@@ -17,7 +16,7 @@ the hamster, no inconsistencies arise (because it get's rolled back)
 ## Tests
 
 * [ ] revise unittests
-  * [ ] extract tests on failure in seperate test cases (espacially in test_main to test on all failing func calls)
+  * [ ] extract tests on failure in seperate test cases (especially in test_main to test on all failing func calls)
 * [ ] revise integration tests
   * [X] use the tests on failure!
   * [ ] widen test cases (e.g. for update_media with valid but unrelated note_id & media_id [invalid note])

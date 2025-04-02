@@ -1,6 +1,7 @@
 """defining the API endpoints for the notes application"""
 
 import logging
+from typing import NoReturn
 
 from fastapi import FastAPI, Depends, UploadFile, HTTPException
 
@@ -10,6 +11,14 @@ from .helpers import (
     convert_md_to_html,
 )
 from .database import DatabaseConnection, get_db
+from .return_types import (
+    ERROR_RESPONSES,
+    CreateResponse,
+    UpdateResponse,
+    DeleteResponse,
+    NoteResponse,
+    NotesResponse,
+)
 
 logger = logging.getLogger("uvicorn.error")
 
@@ -19,11 +28,12 @@ MEDIA_PATH = "note_{note_id}/media/{media_id}"
 app = FastAPI()
 
 
-def raise_errors(result):
+def raise_errors(result: dict) -> None | NoReturn:
+    """raises an HTTPException if the result of an operation is an error"""
     if result["status"] == "error":
         logger.error(result)
         (code, kind) = (
-            (500, "Server error occured")
+            (500, "Server error")
             if result.get("type") == "server"
             else (400, "Invalid request")
         )
@@ -32,7 +42,8 @@ def raise_errors(result):
         )
 
 
-def test_not_empty(**kwargs: str):
+def test_not_empty(**kwargs: str) -> None | NoReturn:
+    """raises an HTTPException if any of the input values are empty"""
     for key, val in kwargs.items():
         if not val:
             raise HTTPException(
@@ -41,9 +52,9 @@ def test_not_empty(**kwargs: str):
             )
 
 
-@app.get("/notes")
-def read_all_notes(db: DatabaseConnection = Depends(get_db)):
-    """returns a list of all notes, containing the id and title of each note"""
+@app.get("/notes", tags=["notes"], responses={**ERROR_RESPONSES})
+def read_all_notes(db: DatabaseConnection = Depends(get_db)) -> NotesResponse:
+    """returns a list of all notes"""
     result = db.read_all_notes()
     raise_errors(result)
     return {
@@ -51,8 +62,10 @@ def read_all_notes(db: DatabaseConnection = Depends(get_db)):
     }
 
 
-@app.get("/notes/{note_id}")
-def read_note(note_id: int, db: DatabaseConnection = Depends(get_db)):
+@app.get("/notes/{note_id}", tags=["notes"], responses={**ERROR_RESPONSES})
+def read_note(
+    note_id: int, db: DatabaseConnection = Depends(get_db)
+) -> NoteResponse:
     """returns the markdown content of a note plus the metadata of pictures
     of the note"""
     result = db.read_note(note_id)
@@ -67,16 +80,16 @@ def read_note(note_id: int, db: DatabaseConnection = Depends(get_db)):
         "title": note_title,
         "content": note_content_md,
         "path": note_path,
-        "pictures": media,
+        "media": media,
     }
 
 
-@app.post("/notes/")
+@app.post("/notes/", tags=["notes"], responses={**ERROR_RESPONSES})
 def create_note(
     note_title: str,
     note_content_md: str,
     db: DatabaseConnection = Depends(get_db),
-):
+) -> CreateResponse:
     """creates a new note.\n
     takes the markdown content of the note as input, converts it to html and
     stores the markdown in the db and distributes the html over the hamster.\n
@@ -101,13 +114,13 @@ def create_note(
     return {"status": "created", "id": note_id, "path": note_path}
 
 
-@app.put("/notes/{note_id}")
+@app.put("/notes/{note_id}", tags=["notes"], responses={**ERROR_RESPONSES})
 def update_note(
     note_id: int,
     note_title: str,
     note_content_md: str,
     db: DatabaseConnection = Depends(get_db),
-):
+) -> UpdateResponse:
     """updates the content & title of a note.\n
     takes the new markdown content of the note as input, converts it to html,
     updates the old markdown (on db) and html (on hamster).\n"""
@@ -129,8 +142,10 @@ def update_note(
     return {"status": "updated", "id": note_id}
 
 
-@app.delete("/notes/{note_id}")
-def delete_note(note_id: int, db: DatabaseConnection = Depends(get_db)):
+@app.delete("/notes/{note_id}", tags=["notes"], responses={**ERROR_RESPONSES})
+def delete_note(
+    note_id: int, db: DatabaseConnection = Depends(get_db)
+) -> DeleteResponse:
     """deletes a note.\n
     removes both the markdown (db) and the html content (hamster)."""
     result = db.read_note(note_id)
@@ -146,12 +161,16 @@ def delete_note(note_id: int, db: DatabaseConnection = Depends(get_db)):
     return {"status": "deleted"}
 
 
-@app.post("/notes/{note_id}/media/")
+@app.post(
+    "/notes/{note_id}/media/",
+    tags=["media"],
+    responses={**ERROR_RESPONSES},
+)
 def store_media(
     note_id: int,
     file: UploadFile,
     db: DatabaseConnection = Depends(get_db),
-):
+) -> CreateResponse:
     """stores a picture on the hamster.\n
     returns the path to the picture."""
     result = db.store_meta_of_media(note_id, file.filename)
@@ -168,13 +187,17 @@ def store_media(
     return {"status": "created", "id": media_id, "path": media_path}
 
 
-@app.put("/notes/{note_id}/media/{media_id}")
+@app.put(
+    "/notes/{note_id}/media/{media_id}",
+    tags=["media"],
+    responses={**ERROR_RESPONSES},
+)
 def update_media(
     note_id: int,
     media_id: int,
     file: UploadFile,
     db: DatabaseConnection = Depends(get_db),
-):
+) -> UpdateResponse:
     """updates a picture on the hamster.\n
     takes the new picture content as input and updates the picture on the
     hamster."""
@@ -193,13 +216,17 @@ def update_media(
     result = db.update_meta_of_media(media_id, file.filename, media_path)
     raise_errors(result)
 
-    return {"status": "updated", "path": media_path}
+    return {"status": "updated", "id": media_id}
 
 
-@app.delete("/notes/{note_id}/media/{media_id}")
+@app.delete(
+    "/notes/{note_id}/media/{media_id}",
+    tags=["media"],
+    responses={**ERROR_RESPONSES},
+)
 def delete_media(
     note_id: int, media_id: int, db: DatabaseConnection = Depends(get_db)
-):
+) -> DeleteResponse:
     """deletes a media file and its metadata."""
     result = db.read_meta_of_media(media_id)
     raise_errors(result)

@@ -7,15 +7,40 @@
   "paths": {
     "/notes": {
       "get": {
+        "tags": [
+          "notes"
+        ],
         "summary": "Read All Notes",
-        "description": "returns a list of all notes, containing the id and title of each note",
+        "description": "returns a list of all notes",
         "operationId": "read_all_notes_notes_get",
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/NotesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerErrorResponse"
+                }
               }
             }
           }
@@ -24,6 +49,9 @@
     },
     "/notes/{note_id}": {
       "get": {
+        "tags": [
+          "notes"
+        ],
         "summary": "Read Note",
         "description": "returns the markdown content of a note plus the metadata of pictures\nof the note",
         "operationId": "read_note_notes__note_id__get",
@@ -43,7 +71,29 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/NoteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerErrorResponse"
+                }
               }
             }
           },
@@ -60,6 +110,9 @@
         }
       },
       "put": {
+        "tags": [
+          "notes"
+        ],
         "summary": "Update Note",
         "description": "updates the content & title of a note.\n\ntakes the new markdown content of the note as input, converts it to html,\nupdates the old markdown (on db) and html (on hamster).",
         "operationId": "update_note_notes__note_id__put",
@@ -97,7 +150,29 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerErrorResponse"
+                }
               }
             }
           },
@@ -114,6 +189,9 @@
         }
       },
       "delete": {
+        "tags": [
+          "notes"
+        ],
         "summary": "Delete Note",
         "description": "deletes a note.\n\nremoves both the markdown (db) and the html content (hamster).",
         "operationId": "delete_note_notes__note_id__delete",
@@ -133,7 +211,29 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerErrorResponse"
+                }
               }
             }
           },
@@ -152,6 +252,9 @@
     },
     "/notes/": {
       "post": {
+        "tags": [
+          "notes"
+        ],
         "summary": "Create Note",
         "description": "creates a new note.\n\ntakes the markdown content of the note as input, converts it to html and\nstores the markdown in the db and distributes the html over the hamster.\n\nreturns the path to the note for the hamster",
         "operationId": "create_note_notes__post",
@@ -180,7 +283,29 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/CreateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerErrorResponse"
+                }
               }
             }
           },
@@ -199,6 +324,9 @@
     },
     "/notes/{note_id}/media/": {
       "post": {
+        "tags": [
+          "media"
+        ],
         "summary": "Store Media",
         "description": "stores a picture on the hamster.\n\nreturns the path to the picture.",
         "operationId": "store_media_notes__note_id__media__post",
@@ -228,7 +356,29 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/CreateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerErrorResponse"
+                }
               }
             }
           },
@@ -247,6 +397,9 @@
     },
     "/notes/{note_id}/media/{media_id}": {
       "put": {
+        "tags": [
+          "media"
+        ],
         "summary": "Update Media",
         "description": "updates a picture on the hamster.\n\ntakes the new picture content as input and updates the picture on the\nhamster.",
         "operationId": "update_media_notes__note_id__media__media_id__put",
@@ -285,7 +438,29 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerErrorResponse"
+                }
               }
             }
           },
@@ -302,9 +477,12 @@
         }
       },
       "delete": {
-        "summary": "Delete Pic",
-        "description": "deletes a picture and its metadata.",
-        "operationId": "delete_pic_notes__note_id__media__media_id__delete",
+        "tags": [
+          "media"
+        ],
+        "summary": "Delete Media",
+        "description": "deletes a media file and its metadata.",
+        "operationId": "delete_media_notes__note_id__media__media_id__delete",
         "parameters": [
           {
             "name": "note_id",
@@ -330,7 +508,29 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClientErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerErrorResponse"
+                }
               }
             }
           },
@@ -378,6 +578,77 @@
         ],
         "title": "Body_update_media_notes__note_id__media__media_id__put"
       },
+      "ClientErrorResponse": {
+        "properties": {
+          "detail": {
+            "type": "string",
+            "title": "Detail",
+            "description": "Error message describing the issue",
+            "examples": [
+              "Invalid request: Missing title"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "detail"
+        ],
+        "title": "ClientErrorResponse"
+      },
+      "CreateResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "created",
+            "title": "Status",
+            "description": "Status of the creation operation",
+            "examples": [
+              "created"
+            ]
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "ID of the newly created resource",
+            "examples": [
+              1
+            ]
+          },
+          "path": {
+            "type": "string",
+            "title": "Path",
+            "description": "Path to the newly created resource",
+            "examples": [
+              "note_1/web.html"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "id",
+          "path"
+        ],
+        "title": "CreateResponse"
+      },
+      "DeleteResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "deleted",
+            "title": "Status",
+            "description": "Status of the delete operation",
+            "examples": [
+              "deleted"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "DeleteResponse"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -390,6 +661,183 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "MediaResponse": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "ID of the media file",
+            "examples": [
+              1
+            ]
+          },
+          "path": {
+            "type": "string",
+            "title": "Media Path",
+            "description": "Path to the media file on the hamster server",
+            "examples": [
+              "note_1/media/1"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "path"
+        ],
+        "title": "MediaResponse"
+      },
+      "NoteResponse": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Note ID",
+            "description": "ID of the note",
+            "examples": [
+              1
+            ]
+          },
+          "title": {
+            "type": "string",
+            "title": "Note Title",
+            "description": "Title of the note",
+            "examples": [
+              "My first note"
+            ]
+          },
+          "content": {
+            "type": "string",
+            "title": "Note Content",
+            "description": "Markdown content of the note",
+            "examples": [
+              "# My first note\n\nThis is my first note."
+            ]
+          },
+          "path": {
+            "type": "string",
+            "title": "Note Path",
+            "description": "Path to the note on the hamster server",
+            "examples": [
+              "note_1/web.html"
+            ]
+          },
+          "media": {
+            "items": {
+              "$ref": "#/components/schemas/MediaResponse"
+            },
+            "type": "array",
+            "title": "Media"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "content",
+          "path",
+          "media"
+        ],
+        "title": "NoteResponse"
+      },
+      "NotesResponse": {
+        "properties": {
+          "notes": {
+            "items": {
+              "$ref": "#/components/schemas/ReducedNoteResponse"
+            },
+            "type": "array",
+            "title": "Notes",
+            "description": "List of reduced note objects",
+            "examples": [
+              [
+                {
+                  "id": 1,
+                  "title": "My first note"
+                },
+                {
+                  "id": 2,
+                  "title": "My second note"
+                }
+              ]
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "notes"
+        ],
+        "title": "NotesResponse"
+      },
+      "ReducedNoteResponse": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "ID of the note",
+            "examples": [
+              1
+            ]
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "Title of the note",
+            "examples": [
+              "My first note"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title"
+        ],
+        "title": "ReducedNoteResponse"
+      },
+      "ServerErrorResponse": {
+        "properties": {
+          "detail": {
+            "type": "string",
+            "title": "Detail",
+            "description": "Error message describing the issue",
+            "examples": [
+              "Server error: Database connection failed"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "detail"
+        ],
+        "title": "ServerErrorResponse"
+      },
+      "UpdateResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "updated",
+            "title": "Status",
+            "description": "Status of the update operation",
+            "examples": [
+              "updated"
+            ]
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "ID of the updated resource",
+            "examples": [
+              1
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "id"
+        ],
+        "title": "UpdateResponse"
       },
       "ValidationError": {
         "properties": {
