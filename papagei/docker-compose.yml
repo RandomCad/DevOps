@@ -22,10 +22,20 @@
 
 services:
   hamster:
-    build:
-      dockerfile_inline: |
-        FROM balindner/hamster
-        COPY . /app/files
+    image: balindner/hamster
+    volumes:
+    - type: bind
+      source: ./index.html
+      target: /app/files/index.html
+      read_only: true
+    - type: bind
+      source: ./favicon.ico
+      target: /app/files/favicon.ico
+      read_only: true
+    - type: bind
+      source: ./assets
+      target: /app/files/assets
+      read_only: true
   chamaeleon:
     image: balindner/chamaeleon
   fuchs:
