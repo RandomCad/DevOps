@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="assets/note.css">
+</head>
+<body>
+<table>
+<thead>
+<tr>
+<th>col1</th>
+<th>col2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>abc</td>
+<td>def</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
