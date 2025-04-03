@@ -3,7 +3,7 @@ kind=$1
 if [[ $kind = "docker" ]]; then
     docker run -d --rm -p 8000:8000 --name chamaeleon_test chamaeleon:test
 else
-    target/debug/chamaeleon.exe &
+    target/debug/chamaeleon &
     pid=$!
 fi
 
