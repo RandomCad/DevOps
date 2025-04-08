@@ -106,7 +106,7 @@ class TestApp(unittest.TestCase):
         self.assertEqual(response.status_code, 200, response.text)
         self.assertIn("id", response.json())
         self.assertIn("content", response.json())
-        self.assertIn("pictures", response.json())
+        self.assertIn("media", response.json())
 
     def _test_read_note_not_found(self):
         """
@@ -225,7 +225,7 @@ class TestApp(unittest.TestCase):
             )
         self.assertEqual(response.status_code, 200, response.text)
         self.assertEqual(response.json()["status"], "updated")
-        self.assertIn("path", response.json())
+        self.assertEqual(response.json()["id"], media_id)
 
     def _test_update_media_failure_missing_parameter(
         self, note_id: int, media_id: int
