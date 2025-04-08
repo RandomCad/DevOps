@@ -29,7 +29,8 @@ mod test {
 
     #[test]
     fn basic() {
-        let html = convert("## Hello, *world*!".to_string());let expected = r#"<!DOCTYPE html>
+        let html = convert("## Hello, *world*!".to_string());
+        let expected = r#"<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
