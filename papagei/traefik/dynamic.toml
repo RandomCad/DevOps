@@ -1,0 +1,18 @@
+[http.routers.fuchs]
+entryPoints = ["web"]
+rule = "PathPrefix(`/notes`) || PathPrefix(`/docs`) || PathPrefix(`/openapi`)"
+priority = 2
+service = "fuchs"
+
+[http.routers.hamster]
+entryPoints = ["web"]
+# default rule
+rule = "PathPrefix(`/`)"
+priority = 1
+service = "hamster"
+
+[[http.services.fuchs.loadBalancer.servers]]
+url = "http://fuchs:8000"
+
+[[http.services.hamster.loadBalancer.servers]]
+url = "http://hamster:8000"
