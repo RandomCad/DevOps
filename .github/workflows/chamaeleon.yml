@@ -48,8 +48,7 @@ jobs:
         cache-from: type=gha,scope=chamaeleon
         cache-to: type=gha,mode=max,scope=chamaeleon
     - name: Run container to test
-      working-directory: ./chamaeleon
-      run: ./test.sh docker
+      run: ./chamaeleon/test.sh docker
       
   
 
