@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fuchs-db-conf
+  labels:
+    app: fuchs-db
+data:
+  POSTGRES_DB: fuchs_db
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres

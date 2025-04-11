@@ -1,0 +1,16 @@
+hamster:
+  name: hamster
+  port: 8000
+
+chamaeleon:
+  name: chamaeleon
+  port: 8000
+
+fuchs:
+  name: fuchs
+  port: 8000
+
+fuchs_db:
+  name: fuchs-db
+  image: "postgres:14"
+  port: 5432

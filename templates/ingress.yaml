@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: devnotes-ingress
+  namespace: dhge
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: "notes.pein-gera.de"
+    http:
+      paths:
+      - path: /notes
+        pathType: Prefix
+        backend:
+          service:
+            name: fuchs-svc
+            port:
+              number: 80
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: hamster-svc
+            port:
+              number: 80
+  tls:
+  - secretName: notes-pein-gera-de-tls
+    hosts:
+    - notes.pein-gera.de
