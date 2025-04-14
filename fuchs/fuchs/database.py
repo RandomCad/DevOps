@@ -2,8 +2,8 @@
 provides methods to write, read and update notes"""
 
 from typing import Any, Callable
-import psycopg2
-from psycopg2._psycopg import cursor
+import psycopg
+from psycopg import connect, Cursor
 
 from . import (
     DB_NAME,
@@ -18,24 +18,24 @@ class DatabaseConnection:
     and update notes"""
 
     def __init__(self, dbname: str, user: str, password: str, host: str):
-        self.conn = psycopg2.connect(
+        self.conn = connect(
             dbname=dbname, user=user, password=password, host=host
         )
 
     def run_query(
         self,
-        func: Callable[[cursor], Any],
+        func: Callable[[Cursor], Any],
         err_msg: str,
         err_check: Callable[[Any], bool] = lambda ret: ret is None,
     ):
         try:
-            with self.conn:
-                with self.conn.cursor() as cur:
-                    ret = func(cur)
+            with self.conn.cursor() as cur:
+                ret = func(cur)
+                self.conn.commit()
             if err_check(ret):
                 return {"status": "error", "message": err_msg}
             return {"status": "success", "data": ret}
-        except psycopg2.Error as e:
+        except psycopg.DatabaseError as e:
             return {
                 "status": "error",
                 "type": "server",
@@ -52,7 +52,7 @@ class DatabaseConnection:
         """reads a note from the database by id,
         returns a tuple with the title, content and path of the note"""
 
-        def query(cur: cursor):
+        def query(cur: Cursor):
             cur.execute(
                 "SELECT note_title, note_content, note_path FROM notes WHERE note_id = %s",
                 (note_id,),
@@ -65,7 +65,7 @@ class DatabaseConnection:
         """reads all notes from the database,
         returns a list of tuples with the title and id of the notes"""
 
-        def query(cur: cursor):
+        def query(cur: Cursor):
             cur.execute("SELECT note_id, note_title FROM notes")
             return cur.fetchall()
 
@@ -75,7 +75,7 @@ class DatabaseConnection:
         """writes a new note to the database,
         returns the id of the new note"""
 
-        def query(cur: cursor):
+        def query(cur: Cursor):
             cur.execute(
                 "INSERT INTO notes (note_title, note_content, note_path) VALUES (%s, %s, %s) RETURNING note_id",
                 (title, content, path),
@@ -88,7 +88,7 @@ class DatabaseConnection:
         """updates a note in the database by id,
         returns the number of rows affected"""
 
-        def query(cur: cursor):
+        def query(cur: Cursor):
             cur.execute(
                 "UPDATE notes SET note_title = %s, note_content = %s, note_path = %s WHERE note_id = %s",
                 (title, content, path, note_id),
@@ -103,7 +103,7 @@ class DatabaseConnection:
         """removes a note from the database by id,
         returns the number of rows affected"""
 
-        def query(cur: cursor):
+        def query(cur: Cursor):
             cur.execute("DELETE FROM notes WHERE note_id = %s", (note_id,))
             return cur.rowcount
 
@@ -115,7 +115,7 @@ class DatabaseConnection:
         """reads the meta information of a media by id,
         returns a tuple with the note_id, name and alt_text of the media"""
 
-        def query(cur: cursor):
+        def query(cur: Cursor):
             cur.execute(
                 "SELECT note_id, media_name, media_path FROM media WHERE media_id = %s",
                 (media_id,),
@@ -129,7 +129,7 @@ class DatabaseConnection:
         returns a list of tuples with the id, name, alt_text and path of the
         media"""
 
-        def query(cur: cursor):
+        def query(cur: Cursor):
             cur.execute(
                 "SELECT media_id, media_name, media_path FROM media WHERE note_id = %s",
                 (note_id,),
@@ -144,7 +144,7 @@ class DatabaseConnection:
         """stores the reference between a media and a note,
         returns the id of the media"""
 
-        def query(cur: cursor):
+        def query(cur: Cursor):
             cur.execute(
                 "INSERT INTO media (note_id, media_name, media_path) VALUES (%s, %s, %s) RETURNING media_id",
                 (note_id, media_name, media_path),
@@ -159,7 +159,7 @@ class DatabaseConnection:
         """updates the meta information of a media by id,
         returns the number of rows affected"""
 
-        def query(cur: cursor):
+        def query(cur: Cursor):
             cur.execute(
                 "UPDATE media SET media_name = %s, media_path = %s WHERE media_id = %s",
                 (media_name, media_path, media_id),
@@ -174,7 +174,7 @@ class DatabaseConnection:
         """removes a media from the database by id,
         returns the number of rows affected"""
 
-        def query(cur: cursor):
+        def query(cur: Cursor):
             cur.execute("DELETE FROM media WHERE media_id = %s", (media_id,))
             return cur.rowcount
 
