@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>DevNotes</title>
         <link rel="stylesheet" href="assets/index.css">
-        <script src="assets/index.js"></script>
+        <script type="module" src="assets/index.js"></script>
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
     </head>
     <body class="body">
@@ -14,7 +14,7 @@
             <!--<header class="kopf">
                 N DevNotes
             </header> -->
-            <div class="note_create_bgdiv" onclick="create_new_note()">
+            <div class="note_create_bgdiv">
                 <div class="note_create_button">
                     + Neue Notiz
                 </div>
@@ -22,22 +22,38 @@
             <nav class="note_navigator_box">
             </nav>
         </aside>
-        <main class="note_main">
+        <main class="note_main" id="einzigwares_main">
             <div class="note_main_header">
-                <h1 class="note_main_title"></h1>
-                <time class="note_main_date"></time>
-            </div>
-            <div class="note_main_second_header">
-                <div class="note_main_author"></div>
+                <h1 contenteditable="false" class="note_main_title"></h1>
                 <div class="note_main_buttons">
+                    <!-- <button class="nota_main_save">
+                        <img src="assets/images/save.png" alt="save">
+                    </button> -->
                     <button class="note_main_edit">
                         <img src="assets/images/edit.png" alt="edit">
                     </button>
                     <button class="note_main_delete">
-                        <img src="assets/images/delete.png" alt="delete" onclick="delete_note()">
+                        <img src="assets/images/delete.png" alt="delete">
+                    </button>
+                </div>
+                <!--<time class="note_main_date"></time>-->
+            </div>
+            <!--
+            <div class="note_main_second_header">
+                <div class="note_main_author"></div>
+                <div class="note_main_buttons">
+                    <button class="nota_main_save">
+                        <img src="assets/images/save.png" alt="save">
+                    </button>
+                    <button class="note_main_edit">
+                        <img src="assets/images/edit.png" alt="edit">
+                    </button>
+                    <button class="note_main_delete">
+                        <img src="assets/images/delete.png" alt="delete">
                     </button>
                 </div>
             </div>
+            -->
             <article class="note_main_body">
                 <div class="note_main_content">
                 </div>
@@ -49,12 +65,5 @@
             <div class="note_files">
             </div>
         </main>
-        <script>
-        // window.onload = test_create_note_navigator(5);
-        window.onload = function() {
-          update_all_note_navigator()
-          open_note_on_start();
-        };
-        </script>
     </body>
 </html>
