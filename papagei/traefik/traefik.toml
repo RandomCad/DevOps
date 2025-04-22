@@ -1,0 +1,8 @@
+[global]
+sendAnonymousUsage = false
+
+[entryPoints.web]
+address = ":80"
+
+[providers.file]
+filename = "/etc/traefik/dynamic.toml"
