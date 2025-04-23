@@ -15,4 +15,3 @@
       - name: init-sql
         configMap:
           name: fuchs-db-init-sql
-      
