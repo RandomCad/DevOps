@@ -1,0 +1,34 @@
+name: Helm
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test_helm:
+    runs-on: ubuntu-latest
+    steps:
+    - 
+      uses: actions/checkout@v4
+    - 
+      name: Set the Kubernetes context
+      uses: azure/k8s-set-context@v4
+      with:
+        method: service-account
+        k8s-url: ${{ secrets.KUBERNETES_URL }}
+        k8s-secret: ${{ secrets.KUBERNETES_SECRET }}
+    - 
+      name: set k8s namespace
+      run: kubectl config set-context --current --namespace dhge
+    - 
+      name: lint helm chart
+      uses: WyriHaximus/github-action-helm3@v3
+      with:
+        exec: helm lint .
+    - 
+      name: helm dry run
+      uses: WyriHaximus/github-action-helm3@v3
+      with:
+        exec: helm install --dry-run --debug devnotes-test .

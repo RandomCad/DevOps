@@ -1,0 +1,32 @@
+{{ template "devnotes.service" .Values.hamster }}
+        volumeMounts:
+        - name: file-vol
+          mountPath: /app/files
+        volumeMounts:
+        - name: papagei-core
+          mountPath: /app/files
+        volumeMounts:
+        - name: papagei-assets
+          mountPath: /app/files/assets
+        volumeMounts:
+        - name: papagei-examples
+          mountPath: /app/files/assets/examples
+        volumeMounts:
+        - name: papagei-images
+          mountPath: /app/files/assets/images
+      volumes:
+      - name: file-vol
+        persistentVolumeClaim:
+          claimName: hamster-files
+      - name: papagei-core
+        configMap:
+          name: papagei-core
+      - name: papagei-assets
+        configMap:
+          name: papagei-assets
+      - name: papagei-examples
+        configMap:
+          name: papagei-examples
+      - name: papagei-images
+        configMap:
+          name: papagei-images

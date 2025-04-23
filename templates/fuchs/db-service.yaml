@@ -1,0 +1,17 @@
+{{ template "devnotes.service" .Values.fuchs_db }}
+        envFrom:
+        - configMapRef:
+          name: fuchs-db-conf
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgresdata
+        - mountPath: /docker-entrypoint-initdb.d/init.sql
+          subPath: init.sql
+          name: init-sql
+      volumes:
+      - name: postgresdata
+        persistentVolumeClaim:
+          claimName: fuchs-db-data
+      - name: init-sql
+        configMap:
+          name: fuchs-db-init-sql
