@@ -38,8 +38,36 @@ spec:
             operator: Exists
       containers:
       - name: {{ .name }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         image: {{ .image | default (print "balindner/" .name) }}
         ports:
         - containerPort: {{ .port }}
+{{- end }}
+
+{{/* ingress: path -> service */}}
+{{- define "devnotes.ingress" }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: devnotes-ingress-{{ .service }}
+  namespace: dhge
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: "notes.pein-gera.de"
+    http:
+      paths:
+      - path: {{ .path }}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .service }}-svc
+            port:
+              number: 80
+  tls:
+  - secretName: notes-pein-gera-de-tls
+    hosts:
+    - notes.pein-gera.de
 {{- end }}

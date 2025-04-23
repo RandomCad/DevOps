@@ -1,0 +1,3 @@
+{{ template "devnotes.ingress" (dict "path" "/" "service" "hamster") }}
+---
+{{ template "devnotes.ingress" (dict "path" "/notes" "service" "fuchs") }}
