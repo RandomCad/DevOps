@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: papagei-assets
+  labels:
+    app: papagei
+data:
+{{ (.Files.Glob "papagei/assets/*.*").AsConfig | indent 2 }}

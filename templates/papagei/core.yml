@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: papagei-core
+  labels:
+    app: papagei
+data:
+{{ (.Files.Glob "papagei/index.html").AsConfig | indent 2 }}
+binaryData:
+  favicon.ico: "{{ .Files.Get "papagei/favicon.ico" | b64enc }}"
