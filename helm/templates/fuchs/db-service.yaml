@@ -1,7 +1,7 @@
 {{ template "devnotes.service" .Values.fuchs_db }}
         envFrom:
         - configMapRef:
-          name: fuchs-db-conf
+            name: fuchs-db-conf
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
           name: postgresdata
