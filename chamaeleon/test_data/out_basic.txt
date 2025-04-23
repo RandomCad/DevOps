@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="assets/note.css">
+</head>
+<body>
+<h2>Hello, <em>world</em>!</h2>
+</body>
+</html>

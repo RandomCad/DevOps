@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>DevNotes</title>
+        <link rel="stylesheet" href="assets/index.css">
+        <script type="module" src="assets/index.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
+    </head>
+    <body class="body">
+        <aside class="lb">
+            <img class="logo" src="assets/images/logo_weis.png" alt="N DevNotes">
+            <!--<header class="kopf">
+                N DevNotes
+            </header> -->
+            <div class="note_create_bgdiv">
+                <div class="note_create_button">
+                    + Neue Notiz
+                </div>
+            </div>
+            <nav class="note_navigator_box">
+            </nav>
+        </aside>
+        <main class="note_main" id="einzigwares_main">
+            <div class="note_main_header">
+                <h1 contenteditable="false" class="note_main_title"></h1>
+                <div class="note_main_buttons">
+                    <!-- <button class="nota_main_save">
+                        <img src="assets/images/save.png" alt="save">
+                    </button> -->
+                    <button class="note_main_edit">
+                        <img src="assets/images/edit.png" alt="edit">
+                    </button>
+                    <button class="note_main_delete">
+                        <img src="assets/images/delete.png" alt="delete">
+                    </button>
+                </div>
+                <!--<time class="note_main_date"></time>-->
+            </div>
+            <!--
+            <div class="note_main_second_header">
+                <div class="note_main_author"></div>
+                <div class="note_main_buttons">
+                    <button class="nota_main_save">
+                        <img src="assets/images/save.png" alt="save">
+                    </button>
+                    <button class="note_main_edit">
+                        <img src="assets/images/edit.png" alt="edit">
+                    </button>
+                    <button class="note_main_delete">
+                        <img src="assets/images/delete.png" alt="delete">
+                    </button>
+                </div>
+            </div>
+            -->
+            <article class="note_main_body">
+                <div class="note_main_content">
+                </div>
+                <iframe class="note_main_content_iframe" src="about:blank">
+                </iframe>
+                <textarea name="Markdown Editor" class="textarea_markdown" placeholder="Hier ist Platz für Ihr Markdown">
+                </textarea>
+            </article>
+            <div class="note_files">
+            </div>
+        </main>
+    </body>
+</html>
