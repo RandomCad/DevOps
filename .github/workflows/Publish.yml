@@ -74,7 +74,7 @@ jobs:
   
   deploy:
     runs-on: ubuntu-latest
-    needs: [publish_images]
+    needs: [publish_images, test_papagei]
     steps:
       - uses: actions/checkout@v4
       - name: Set the Kubernetes context
