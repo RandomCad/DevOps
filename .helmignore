@@ -3,13 +3,7 @@
 /chamaeleon/
 /fuchs/
 /hamster/
-papagei/traefik/
-papagei/package-lock.json
-papagei/package.json
-papagei/.gitignore
-papagei/.linthtmlrc.yaml
-papagei/docker-compose.yml
-papagei/eslint.config.mjs
+/papagei/
 target/
 .gitignore
 .dockerignore

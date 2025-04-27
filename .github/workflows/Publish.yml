@@ -106,4 +106,4 @@ jobs:
       - name: deploy to k8s cluster
         uses: WyriHaximus/github-action-helm3@v3
         with:
-          exec: helm upgrade devnotes helm --install --atomic --namespace=dhge
+          exec: helm upgrade devnotes . --install --atomic --namespace=dhge

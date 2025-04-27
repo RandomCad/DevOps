@@ -12,7 +12,7 @@
         volumeMounts:
         - name: file-vol
           mountPath: /app/target
-        command: ['sh', '-c', 'mv /app/files/* /app/target']
+        command: ['sh', '-c', 'cp -rf /app/files/* -t /app/target']
       volumes:
       - name: file-vol
         persistentVolumeClaim:
