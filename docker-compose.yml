@@ -1,0 +1,51 @@
+# compose file for local execution
+#
+# usage:
+# - starting:
+#   docker compose up -d --pull always
+# - stopping:
+#   docker compose down
+#
+# this compose stack starts:
+# - hamster with papagei
+# - chamaeleon
+# - fuchs
+# - fuchs_db (database for fuchs)
+# - traefik (gateway)
+#
+# papagei will be available under localhost
+
+
+services:
+  hamster:
+    image: balindner/hamster:papagei
+  chamaeleon:
+    image: balindner/chamaeleon
+  fuchs:
+    image: balindner/fuchs
+    environment:
+      DB_NAME: fuchs_db
+      DB_PASSWORD: postgres
+      DB_USER: postgres
+      DB_HOST: fuchs-db
+      URL_HAMSTER: http://hamster:8000
+      URL_CHAMAELEON: http://chamaeleon:8000
+  fuchs-db:
+    image: postgres:alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: fuchs_db
+    volumes:
+    - type: bind
+      source: ./fuchs/init.sql
+      target: /docker-entrypoint-initdb.d/init.sql
+  traefik:
+    image: traefik
+    volumes:
+    - type: bind
+      source: ./papagei/traefik
+      target: /etc/traefik
+      read_only: true
+    ports:
+    - 127.0.0.1:80:80
