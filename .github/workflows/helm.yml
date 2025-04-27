@@ -31,4 +31,4 @@ jobs:
       name: helm dry run
       uses: WyriHaximus/github-action-helm3@v3
       with:
-        exec: helm install --dry-run --debug devnotes-test .
+        exec: helm install --dry-run --debug devnotes .
