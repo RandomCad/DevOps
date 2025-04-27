@@ -26,9 +26,9 @@ jobs:
       name: lint helm chart
       uses: WyriHaximus/github-action-helm3@v3
       with:
-        exec: helm lint helm
+        exec: helm lint .
     - 
       name: helm dry run
       uses: WyriHaximus/github-action-helm3@v3
       with:
-        exec: helm install --dry-run --debug devnotes-test helm
+        exec: helm install --dry-run --debug devnotes .

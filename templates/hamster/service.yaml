@@ -1,0 +1,19 @@
+{{ template "devnotes.service" .Values.hamster }}
+        volumeMounts:
+        - name: file-vol
+          mountPath: /app/files
+        livenessProbe:
+          httpGet:
+            port: 8000
+            path: /index.html
+      initContainers:
+      - name: copy-papagei
+        image: {{ .Values.hamster.image }}
+        volumeMounts:
+        - name: file-vol
+          mountPath: /app/target
+        command: ['sh', '-c', 'cp -rf /app/files/* -t /app/target']
+      volumes:
+      - name: file-vol
+        persistentVolumeClaim:
+          claimName: hamster-files

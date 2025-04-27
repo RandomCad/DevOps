@@ -1,5 +1,6 @@
 hamster:
   name: hamster
+  image: "balindner/hamster:papagei"
   port: 8000
 
 chamaeleon:
@@ -12,5 +13,5 @@ fuchs:
 
 fuchs_db:
   name: fuchs-db
-  image: "postgres:14"
+  image: "postgres:17"
   port: 5432

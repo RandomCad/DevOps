@@ -1,0 +1,14 @@
+.git/
+.github/
+/chamaeleon/
+/fuchs/
+/hamster/
+/papagei/
+target/
+.gitignore
+.dockerignore
+.helmignore
+Cargo.toml
+Cargo.lock
+LICENSE
+README.md
